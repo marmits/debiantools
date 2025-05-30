@@ -11,6 +11,8 @@ services:
       TZ: Europe/Paris
     volumes:
       - ./datas:/datas
+    ports:
+      - "2222:22"
 
 volumes:
   datas:

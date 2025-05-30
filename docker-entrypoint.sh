@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+
+
+#/usr/sbin/sshd -D
+
 touch /home/debian/test.txt
 chmod 755 /home/debian/test.txt
 
