@@ -1,8 +1,23 @@
 ## Container docker debian 
 
+## générer une nouvelle paire de clés SSH
+dans le répertoire `ssh_keys`
+ssh-keygen -t rsa -b 4096
+
+clé privée :  
+`ssh_keys/debiantools_id_rsa`
+
+clé publique :  
+`ssh_keys/debiantools_id_rsa.pub`
 
 ## Démarrer 
 `docker compose up --wait`
+
+## Reconstruit proprement
+`docker-compose down -v && docker-compose up --build -d`
+
+-v : Supprime aussi les volumes associés (attention, peut effacer des données persistantes).
+-d : relance en arrière-plan
 
 ## Entrer dans le container
 `ssh debian@localhost -p 2222 -i /dir_projet/ssh_keys/debiantools_id_rsa`
