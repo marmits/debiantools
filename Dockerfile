@@ -16,35 +16,47 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
 
 
-#RUN ssh-keygen -A && \
-#    mkdir -p /run/sshd
-#RUN echo 'root:secret' | chpasswd # Changez ce mot de passe !
-#RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+# Créer l'utilisateur debian
+RUN useradd -m debian && \
+    echo "debian:secret" | chpasswd && \
+    echo "debian ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 
-    # 1. Créer l'utilisateur "debian" sans home directory et sans shell de login
-RUN useradd -m -s /bin/bash debian && \
-    echo 'debian:password' | chpasswd && \
-    usermod -aG sudo debian && \
-    #mkdir /home/debian && \
-    #chown debian:debian /home/debian && \
-    #chmod 755 /home/debian && \
-    mkdir -p /etc/sudoers.d && \
-    echo "debian ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/debian-nopasswd && \
-    chmod 0440 /etc/sudoers.d/debian-nopasswd && \
-    grep debian /etc/group && sudo -l -U debian
+# Configurer SSH
+RUN mkdir -p /home/debian/.ssh && \
+    chmod 700 /home/debian/.ssh
+
+# Copier la clé publique dans le conteneur
+COPY ssh_keys/debiantools_id_rsa.pub /home/debian/.ssh/authorized_keys
+
+# Définir les bonnes permissions pour le répertoire .ssh et la clé autorisée
+RUN chown -R debian:debian /home/debian/.ssh && \
+    chmod 600 /home/debian/.ssh/authorized_keys
+
+# Générer les clés SSH host
+RUN ssh-keygen -A
+
+# Configurer les options SSH
+RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config && \
+    echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config && \
+    echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+
+# Copier le script d'entrée
+COPY --link --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN dos2unix /usr/local/bin/docker-entrypoint.sh
+
+RUN chsh -s /bin/bash debian
 
 EXPOSE 22
 
-#lance un shell interactif au démarrage
-COPY --link --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-
 WORKDIR /
-RUN dos2unix /usr/local/bin/docker-entrypoint
+RUN dos2unix /usr/local/bin/docker-entrypoint.sh
 
-WORKDIR /home/debian
-USER debian
 
-ENTRYPOINT ["docker-entrypoint"]
-CMD ["/bin/bash"]
+#WORKDIR /home/debian
+#USER debian
 
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+#lance un shell interactif 
+CMD ["/bin/bash -l"]
