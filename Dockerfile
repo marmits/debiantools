@@ -7,7 +7,7 @@ LABEL org.opencontainers.image.authors="Marmits" \
 
 RUN apt -y update && apt -y full-upgrade && \
     apt install -y --no-install-recommends locales libicu-dev libpq-dev acl libzip-dev systemd iputils-ping dnsutils git && \
-    apt install -y wget jq gzip dos2unix ca-certificates tzdata openssl openssh-server sudo nano && \
+    apt install -y wget curl jq gzip dos2unix ca-certificates tzdata openssl openssh-server sudo nano && \
     apt install -y pandoc && \
     update-ca-certificates --fresh
 

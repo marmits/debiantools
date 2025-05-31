@@ -46,6 +46,7 @@ ls -la /etc/ssh/ssh_host_* || echo "Aucune clé trouvée"
 #############  DIVERS ######################""
 touch /home/debian/test.txt
 chmod 755 /home/debian/test.txt
+echo "un contenu généré au démarrage" > /home/debian/test.txt
 
 mkdir -p /home/debian/datas
 chown debian:debian /home/debian/datas
