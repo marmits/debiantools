@@ -43,9 +43,21 @@ voir fichiers :
 * `docker-stop.sh` => stop et supprime tous les containers
 * `docker-clean.sh` => stop, supprime les containers, les images et les volumes
 
-### Extra
-Installation de `pandoc` pour convertir du mardown en wiki
+### Tools or Not
+
+#### PANDOC
+Pour convertir du mardown en wiki
 - Dans le container, `# cd /datas`  
 ex:  
-- `pandoc -f markdown -t mediawiki volumes.md -o volumes.wikis`
+- $ `pandoc -f markdown -t mediawiki volumes.md -o volumes.wikis`
 
+#### HOLLYWOOD
+- Ecran de hacker:   
+$ `hollywood`
+
+#### CMATRIX
+$ `cmatrix -r`
+
+#### COWSAY
+- $ `cowsay "Hello, World!"`     
+- $ `cowsay -f dragon "I am a dragon! RAWR!"`
