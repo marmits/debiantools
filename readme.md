@@ -3,8 +3,8 @@ Permet d'utliser un container debian et d'y accéder en ssh.
 Divers outils installés (voir dokerfile)
 
 ## Générer une nouvelle paire de clés SSH
-dans le répertoire `ssh_keys`
-ssh-keygen -t rsa -b 4096
+dans le répertoire `ssh_keys`  
+`ssh-keygen -t rsa -b 4096`
 
 clé privée :  
 `ssh_keys/debiantools_id_rsa`
