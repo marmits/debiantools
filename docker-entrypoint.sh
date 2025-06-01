@@ -49,4 +49,5 @@ fi
 
 
 ################### server ssh ##########################
-exec /usr/sbin/sshd -D -e
+rsyslogd &
+exec /usr/sbin/sshd -D

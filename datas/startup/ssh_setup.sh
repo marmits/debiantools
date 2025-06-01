@@ -42,6 +42,22 @@ for type in "${!KEY_TYPES[@]}"; do
     ssh-keygen -lf "/etc/ssh/ssh_host_${type}_key"
 done
 
+# 1. Vérification/Création de l'utilisateur syslog
+if ! id -u syslog >/dev/null 2>&1; then
+    echo "Création de l'utilisateur syslog..."
+    addgroup --system adm 2>/dev/null || true
+    adduser \
+        --system \
+        --no-create-home \
+        --ingroup adm \
+        --disabled-password \
+        --quiet \
+        syslog
+fi
+
+touch /var/log/sshd.log
+chmod 640 /var/log/sshd.log
+chown syslog:adm /var/log/sshd.log
 
 
 echo "=== Configuration SSH terminée avec succès ==="

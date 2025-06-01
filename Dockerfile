@@ -11,7 +11,7 @@ LABEL org.opencontainers.image.authors="Marmits" \
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt -y update && apt -y full-upgrade && \
-    apt install -y --no-install-recommends locales libicu-dev libpq-dev acl libzip-dev systemd iputils-ping dnsutils git && \
+    apt install -y --no-install-recommends locales libicu-dev libpq-dev acl libzip-dev systemd rsyslog iputils-ping dnsutils git && \
     apt install -y wget less curl jq gzip dos2unix ca-certificates tzdata openssl openssh-server sudo nano htop nmap && \
     apt install -y pandoc qrencode bsdmainutils cowsay cmatrix && \
     update-ca-certificates --fresh
@@ -31,7 +31,6 @@ RUN apt clean && \
     apt autoremove --purge && \
     apt autoclean && \
     rm -rf /var/lib/apt/lists/*
-
 
 # Réactive le mode interactif par défaut (bonne pratique)
 ENV DEBIAN_FRONTEND=
@@ -66,8 +65,11 @@ RUN chown -R debian:debian /home/debian/.ssh && \
 # Générer les clés SSH host
 RUN ssh-keygen -A
 
-COPY --link --chmod=600 config/ssh_config/sshd_config.conf /etc/ssh/sshd_config.d/sshd.conf
-RUN dos2unix /etc/ssh/sshd_config.d/sshd.conf
+COPY --link --chmod=600 config/rsyslog-ssh.conf /etc/rsyslog.d/sshd.conf
+RUN dos2unix /etc/rsyslog.d/sshd.conf
+
+COPY --link --chmod=600 config/ssh_config/sshd_config.conf /etc/ssh/sshd_config
+RUN dos2unix /etc/ssh/sshd_config
 
 # Copier le script d'entrée
 COPY --link --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
