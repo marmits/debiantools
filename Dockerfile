@@ -66,10 +66,8 @@ RUN chown -R debian:debian /home/debian/.ssh && \
 # Générer les clés SSH host
 RUN ssh-keygen -A
 
-# Configurer les options SSH
-RUN echo "PasswordAuthentication no" >> /etc/ssh/sshd_config && \
-    echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config && \
-    echo "PermitRootLogin no" >> /etc/ssh/sshd_config
+COPY --link --chmod=600 config/ssh_config/sshd_config.conf /etc/ssh/sshd_config.d/sshd.conf
+RUN dos2unix /etc/ssh/sshd_config.d/sshd.conf
 
 # Copier le script d'entrée
 COPY --link --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh

@@ -42,4 +42,6 @@ for type in "${!KEY_TYPES[@]}"; do
     ssh-keygen -lf "/etc/ssh/ssh_host_${type}_key"
 done
 
+
+
 echo "=== Configuration SSH terminée avec succès ==="
