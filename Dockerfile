@@ -50,7 +50,7 @@ RUN useradd -m debian && \
 RUN echo "PS1='\[\e[1;33m\]\D{%H:%M}\[\e[m\] \[\e[47m\e[1;30m\e[7m\]\u@\h\[\e[1;31m\]:\[\e[44m\e[1;37m\]\w\[\e[m\] 🐳\$ '" >> /home/debian/.bashrc
 
 # OU pour un utilisateur spécifique (ex: 'root')
-RUN echo "PS1='\[\e[1;31m\]\u@\h\[\e[m\]:\[\e[1;35m\]\w\[\e[m\]\\\\$ '" >> /root/.bashrc
+RUN echo "PS1='\[\e[1;33m\]\D{%H:%M}\[\e[m\] \[\e[47m\e[1;31m\e[7m\]\u@\h\[\e[1;31m\]:\[\e[44m\e[1;37m\]\w\[\e[m\] 🐳\$ '" >> /root/.bashrc
 
 
 # Configurer SSH
