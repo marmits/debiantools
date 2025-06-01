@@ -1,55 +1,52 @@
 #!/bin/sh
 set -e
+echo "TZ=${TZ}" > /datas/startup/config.env
 
-
-
-# Créer le répertoire pour la séparation des privilèges
-mkdir -p /run/sshd
-
-# Vérification et configuration des permissions des clés SSH
-chmod 600 /etc/ssh/ssh_host_*
-chown root:root /etc/ssh/ssh_host_*
-
-#Vérification des Clés d'Hôte :
-#Assurez-vous que les clés d'hôte sont bien générées et présentes dans le conteneur. 
-if [ ! -f /etc/ssh/ssh_host_rsa_key ]; then
-    ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
-fi
-if [ ! -f /etc/ssh/ssh_host_ecdsa_key ]; then
-    ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
-fi
-if [ ! -f /etc/ssh/ssh_host_ed25519_key ]; then
-    ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
+# Configuration SSH
+if [ -f "/datas/startup/ssh_setup.sh" ]; then
+    chmod +x /datas/startup/ssh_setup.sh
+    /datas/startup/ssh_setup.sh
+else
+    echo "Warning: Script ssh_setup.sh introuvable - configuration SSH par défaut" >&2
+    
+    # Fallback minimal
+    mkdir -p /run/sshd
+    ssh-keygen -A  # Génère toutes les clés manquantes
+    chmod 600 /etc/ssh/ssh_host_*
+    chown root:root /etc/ssh/ssh_host_*
 fi
 
 
-# Vérification finale des clés
-echo "=== Vérification finale ==="
-sudo ls -la /etc/ssh/ssh_host_*
-sudo ssh-keygen -lf /etc/ssh/ssh_host_rsa_key
-sudo ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key
-sudo ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key
+############## UPTIME CONATAINER #########################
+# Initialiser l'uptime via le script externe
+if [ -f "/datas/startup/uptime.sh" ]; then
+    chmod +x /datas/startup/uptime.sh
+    /datas/startup/uptime.sh &
+else
+    echo "Warning: Script test.sh introuvable dans /datas/startup/" >&2
+fi
 
 
-# Vérification des permissions (exécuté en tant que debian)
-echo "Vérification des permissions..."
-sudo ls -la /etc/ssh/ || echo "Échec de la vérification"
+############ BANNIERE #################################
+# Initialiser la bannière via le script externe
+if [ -f "/datas/startup/banner.sh" ]; then
+    chmod +x /datas/startup/banner.sh
+    /datas/startup/banner.sh
+else
+    echo "Warning: Script banner.sh introuvable dans /datas/startup/" >&2
+fi
+########################################
 
 
-# Vérification des clés (debug avancé)
-echo "=== Contenu de /etc/ssh ==="
-ls -la /etc/ssh/
-echo "=== Clés SSH disponibles ==="
-ls -la /etc/ssh/ssh_host_* || echo "Aucune clé trouvée"
+############# setup ######################
+# Initialiser la configuration des fichiers et répertoires via le script externe
+if [ -f "/datas/startup/setup.sh" ]; then
+    chmod +x /datas/startup/setup.sh
+    /datas/startup/setup.sh
+else
+    echo "Warning: Script setup.sh introuvable dans /datas/startup/" >&2
+fi
 
 
-#############  DIVERS ######################""
-touch /home/debian/test.txt
-chmod 755 /home/debian/test.txt
-echo "un contenu généré au démarrage" > /home/debian/test.txt
-
-mkdir -p /home/debian/datas
-chown debian:debian /home/debian/datas
-
-
+################### server ssh ##########################
 exec /usr/sbin/sshd -D -e
