@@ -13,6 +13,8 @@ services:
       TZ: Europe/Paris
     volumes:
       - ./datas:/datas
+    tmpfs:
+      - /tmp:size=100m #éphémère en RAM
     deploy:
       resources:
         limits:

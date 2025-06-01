@@ -1,6 +1,7 @@
 #!/bin/sh
 # pour entrypoint.sh
 # donne le temps écoulé depuis que le container est lancé
+
 CONTAINER_START_FILE="/var/container_start_time"
 OUTPUT_FILE="/tmp/container_uptime"
 
