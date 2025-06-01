@@ -12,7 +12,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt -y update && apt -y full-upgrade && \
     apt install -y --no-install-recommends locales libicu-dev libpq-dev acl libzip-dev systemd iputils-ping dnsutils git && \
-    apt install -y wget curl jq gzip dos2unix ca-certificates tzdata openssl openssh-server sudo nano htop nmap && \
+    apt install -y wget less curl jq gzip dos2unix ca-certificates tzdata openssl openssh-server sudo nano htop nmap && \
     apt install -y pandoc qrencode bsdmainutils cowsay cmatrix && \
     update-ca-certificates --fresh
 
