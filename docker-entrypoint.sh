@@ -2,6 +2,10 @@
 set -e
 echo "TZ=${TZ}" > /datas/startup/config.env
 
+# Sous Windows, les fichiers texte utilisent par défaut les fins de ligne CRLF (\r\n), tandis que sous Linux, c’est LF (\n)
+# Convertir les fins de ligne du fichier ssh_setup.sh en LF
+find /datas -type f -name "*.sh" -exec dos2unix {} \;
+
 # Configuration SSH
 if [ -f "/datas/startup/ssh_setup.sh" ]; then
     chmod +x /datas/startup/ssh_setup.sh
