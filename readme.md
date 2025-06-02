@@ -52,10 +52,6 @@ Pour convertir du mardown en wiki
 ex:  
 - $ `pandoc -f markdown -t mediawiki volumes.md -o volumes.wikis`
 
-#### HOLLYWOOD
-- Ecran de hacker:   
-$ `hollywood`
-
 #### CMATRIX
 $ `cmatrix -r`
 
