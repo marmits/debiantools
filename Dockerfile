@@ -46,6 +46,7 @@ RUN mkdir -p /home/debian/.ssh && \
 
 # Copier la clé publique dans le conteneur
 COPY ssh_keys/debiantools_id_rsa.pub /home/debian/.ssh/authorized_keys
+RUN dos2unix /home/debian/.ssh/authorized_keys
 
 # Définir les bonnes permissions pour le répertoire .ssh et la clé autorisée
 RUN chown -R debian:debian /home/debian/.ssh && \
