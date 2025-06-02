@@ -1,15 +1,18 @@
 #!/bin/sh
 set -e
-echo "TZ=${TZ}" > /datas/startup/config.env
+echo "TZ=${TZ}" > /startup/config.env
 
 # Sous Windows, les fichiers texte utilisent par défaut les fins de ligne CRLF (\r\n), tandis que sous Linux, c’est LF (\n)
 # Convertir les fins de ligne du fichier ssh_setup.sh en LF
 find /datas -type f -name "*.sh" -exec dos2unix {} \;
+find /startup -type f -name "*.sh" -exec dos2unix {} \;
+sudo chmod -R +x /datas/*
+sudo chmod -R +x /startup/*
 
 # Configuration SSH
-if [ -f "/datas/startup/ssh_setup.sh" ]; then
-    chmod +x /datas/startup/ssh_setup.sh
-    /datas/startup/ssh_setup.sh
+if [ -f "/startup/ssh_setup.sh" ]; then
+    chmod +x /startup/ssh_setup.sh
+    /startup/ssh_setup.sh
 else
     echo "Warning: Script ssh_setup.sh introuvable - configuration SSH par défaut" >&2
     
@@ -23,32 +26,32 @@ fi
 
 ############## UPTIME CONATAINER #########################
 # Initialiser l'uptime via le script externe
-if [ -f "/datas/startup/uptime.sh" ]; then
-    chmod +x /datas/startup/uptime.sh
-    /datas/startup/uptime.sh &
+if [ -f "/startup/uptime.sh" ]; then
+    chmod +x /startup/uptime.sh
+    /startup/uptime.sh &
 else
-    echo "Warning: Script test.sh introuvable dans /datas/startup/" >&2
+    echo "Warning: Script test.sh introuvable dans /startup/" >&2
 fi
 
 
 ############ BANNIERE #################################
 # Initialiser la bannière via le script externe
-if [ -f "/datas/startup/banner.sh" ]; then
-    chmod +x /datas/startup/banner.sh
-    /datas/startup/banner.sh
+if [ -f "/startup/banner.sh" ]; then
+    chmod +x /startup/banner.sh
+    /startup/banner.sh
 else
-    echo "Warning: Script banner.sh introuvable dans /datas/startup/" >&2
+    echo "Warning: Script banner.sh introuvable dans /startup/" >&2
 fi
 ########################################
 
 
 ############# setup ######################
 # Initialiser la configuration des fichiers et répertoires via le script externe
-if [ -f "/datas/startup/setup.sh" ]; then
-    chmod +x /datas/startup/setup.sh
-    /datas/startup/setup.sh
+if [ -f "/startup/setup.sh" ]; then
+    chmod +x /startup/setup.sh
+    /startup/setup.sh
 else
-    echo "Warning: Script setup.sh introuvable dans /datas/startup/" >&2
+    echo "Warning: Script setup.sh introuvable dans /startup/" >&2
 fi
 
 

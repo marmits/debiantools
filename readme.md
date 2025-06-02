@@ -12,13 +12,14 @@ clé privée :
 clé publique :  
 `ssh_keys/debiantools_id_rsa.pub`
 
+### entrypoint
+- dossier `/startup` scripts utlisés lors de la fabrication du container par `docker_entrypoint.sh`
+
 ### Description du répertoire datas
-- dossier `startup` scripts utlisés lors de la fabrication du container par `docker_entrypoint.sh`  
+Dossier de données  
 - dossier `bash` scripts disponibles à éxécuter une fois connecté dans le container.
 ### Permissions
 
-Ajouter le droit d'éxécution sur les scripts bash dans le répetoire datas :   
-`sudo chmod -R +x datas/*`
 
 ## Lancer le container
 `docker compose up --wait`

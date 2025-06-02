@@ -13,6 +13,7 @@ services:
       TZ: Europe/Paris
     volumes:
       - ./datas:/datas
+      - ./startup:/startup
     tmpfs:
       - /tmp:size=100m #éphémère en RAM
     deploy:
@@ -32,6 +33,7 @@ services:
 volumes:
   datas:
   ssh-keys:
+  startup:
 
 networks:
   my-ipv6-net:
