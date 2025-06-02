@@ -2,6 +2,9 @@
 Permet d'utliser un container debian et d'y accéder en ssh.  
 Divers outils installés (voir dokerfile)
 
+## Branche Hollywood  
+Version avec le package hollywood
+
 ## Générer une nouvelle paire de clés SSH
 dans le répertoire `ssh_keys`  
 `ssh-keygen -t rsa -b 4096`
