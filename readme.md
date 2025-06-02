@@ -34,6 +34,14 @@ Dans le répertoire du projet:
 ou  
 `make run SSH_KEY=chemin_de_la_cle_ssh`  
 
+## Clé SSH changé 
+Si SSH a détecté que la clé d'identité du serveur distant a changé, car le serveur a été réinstallé ou modifié (cas fréquent en développement ou en local).  
+Lancer la commande :  
+`ssh-keygen -f ~/.ssh/known_hosts -R [localhost]:2222`
+
+
+## Commande 
+
 ## Reconstruit proprement
 `docker-compose down -v && docker-compose up --build -d`
 -v : Supprime aussi les volumes associés (attention, peut effacer des données persistantes).
