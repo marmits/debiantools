@@ -70,7 +70,6 @@ RUN chsh -s /bin/bash debian
 EXPOSE 22
 
 WORKDIR /
-RUN dos2unix /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
