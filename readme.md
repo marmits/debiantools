@@ -3,22 +3,25 @@ Permet d'utliser un container debian et d'y accéder en ssh.
 Divers outils installés (voir dokerfile)
 
 ## Générer une nouvelle paire de clés SSH
-dans le répertoire `ssh_keys`  
-`ssh-keygen -t rsa -b 4096`
 
-clé privée :  
-`ssh_keys/debiantools_id_rsa`
+1. Soit utliser le script `generekey.sh`
 
-clé publique :  
-`ssh_keys/debiantools_id_rsa.pub`
+2. Soit manuellement: 
+dans le répertoire `ssh_keys/`  
+`ssh-keygen -t rsa -b 4096`  
+ clé privée :    
+ `ssh_keys/debiantools_id_rsa`  
+ clé publique :  
+ `ssh_keys/debiantools_id_rsa.pub`
 
+## Descriptions
 ### entrypoint
 - dossier `/startup` scripts utlisés lors de la fabrication du container par `docker_entrypoint.sh`
 
 ### Description du répertoire datas
 Dossier de données  
 - dossier `bash` scripts disponibles à éxécuter une fois connecté dans le container.
-### Permissions
+
 
 ## Installation des images
 Installer l'image et la taguer:   
