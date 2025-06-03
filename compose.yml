@@ -20,6 +20,10 @@ services:
     volumes:
       - ./datas:/datas
       - ./startup:/startup
+      - ./ssh_keys:/ssh_keys:ro  # Monte le dossier des clés en lecture seule
+    secrets:
+      - ssh_private_key
+      - ssh_public_key
     tmpfs:
       - /tmp:size=100m #éphémère en RAM
     deploy:
@@ -40,6 +44,12 @@ volumes:
   datas:
   ssh-keys:
   startup:
+
+secrets:
+  ssh_private_key:
+    file: ./ssh_keys/debiantools_id_rsa
+  ssh_public_key:
+    file: ./ssh_keys/debiantools_id_rsa.pub
 
 networks:
   my-ipv6-net:

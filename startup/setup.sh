@@ -21,4 +21,6 @@ if ! mkdir -p "$HOME_DIR/datas"; then
     echo "Erreur: Impossible de créer le répertoire datas" >&2
     exit 1
 fi
+
+
 chown "$SSH_USER:$SSH_USER" "$HOME_DIR/datas"
