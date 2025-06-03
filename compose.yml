@@ -1,16 +1,22 @@
 services:
   tools:
+    image: ${IMAGE_NAME_DEBIAN:-debian12}
     build:
       context: .
-      target: tools
-    container_name: debian_tools
+      target: ${TARGET:-tools}
+      args:
+        BASE_IMAGE: ${BASE_IMAGE:-debian:latest}
+        TZ: ${TZ}
+    container_name: ${CONTAINER_NAME_TOOLS:-debian_tools}
     ports:
-      - "2222:22"  # Mappage du port 22 du conteneur vers 2222 sur l'hôte
+      - target: 22
+        published: ${TOOLS_PORT_SSH:-2222} # Mappage du port 22 du conteneur vers 2222 sur l'hôte
+        protocol: tcp
     stdin_open: true #active stdin (équivalent de -i)
     tty: true #active tty (équivalent de -t)
     restart: on-failure
     environment:
-      TZ: Europe/Paris
+      TZ: ${TZ}
     volumes:
       - ./datas:/datas
       - ./startup:/startup

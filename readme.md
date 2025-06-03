@@ -20,6 +20,13 @@ Dossier de données
 - dossier `bash` scripts disponibles à éxécuter une fois connecté dans le container.
 ### Permissions
 
+## Installation des images
+Installer l'image et la taguer:   
+(Permet d'avoir une copie locale pour ne pas re-télécharger à chaque fois lors d'un build, l'image de base sur Docker Hub)  
+voir: [Wiki](https://marmits.com/wiki/Docker_Images) 
+`docker pull debian:latest`   
+puis   
+`docker tag debian:latest local/debian:latest`     
 
 ## Lancer le container
 `docker compose up --wait`
