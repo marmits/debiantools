@@ -7,6 +7,9 @@ services:
       args:
         BASE_IMAGE: ${BASE_IMAGE:-debian:latest}
         TZ: ${TZ}
+        SSH_USER: "debian"
+        SSH_UID: "1000"  # UID de l'utilisateur debian
+        SSH_GID: "1000"  # GID de l'utilisateur debian
     container_name: ${CONTAINER_NAME_TOOLS:-debian_tools}
     ports:
       - target: 22
@@ -14,16 +17,15 @@ services:
         protocol: tcp
     stdin_open: true #active stdin (équivalent de -i)
     tty: true #active tty (équivalent de -t)
-    restart: on-failure
+    restart: on-failure    
     environment:
       TZ: ${TZ}
+      PUBKEY: /run/secrets/ssh_public_key
+    secrets:
+      - ssh_public_key
     volumes:
       - ./datas:/datas
       - ./startup:/startup
-      - ./ssh_keys:/ssh_keys:ro  # Monte le dossier des clés en lecture seule
-    secrets:
-      - ssh_private_key
-      - ssh_public_key
     tmpfs:
       - /tmp:size=100m #éphémère en RAM
     deploy:
@@ -40,16 +42,16 @@ services:
     networks:
       - my-ipv6-net
 
-volumes:
-  datas:
-  ssh-keys:
-  startup:
-
 secrets:
-  ssh_private_key:
-    file: ./ssh_keys/debiantools_id_rsa
   ssh_public_key:
     file: ./ssh_keys/debiantools_id_rsa.pub
+
+volumes:
+  datas:
+  startup:
+
+
+
 
 networks:
   my-ipv6-net:

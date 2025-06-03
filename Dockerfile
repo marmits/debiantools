@@ -10,6 +10,7 @@ LABEL org.opencontainers.image.authors="Marmits" \
 # Déclaration des ARG avec valeurs par défaut
 ARG TZ=Europe/Paris
 ARG SSH_USER=debian
+ARG PUBKEY=
 #ARG KEY_DIR=ssh_keys
 #ARG KEY_PREFIX=debiantools_id_rsa
 
@@ -18,13 +19,8 @@ ARG SSH_USER=debian
 
 # Passage en ENV uniquement pour les variables nécessaires
 ENV TZ=${TZ} \
-    SSH_USER=${SSH_USER}
- #   SSH_KEY_PATH=${SSH_KEY_PATH}
-
-
- 
-
-
+    SSH_USER=${SSH_USER} \
+    PUBKEY=${PUBKEY}
 
 # Désactive les prompts interactif
 #Force les outils Debian (dpkg, apt) à prendre les valeurs par défaut au lieu de poser des questions.
@@ -67,13 +63,19 @@ RUN echo "PS1='\[\e[1;33m\]\D{%H:%M}\[\e[m\] \[\e[47m\e[1;30m\e[7m\] 🐳 \u@\h\
     echo "PS1='\[\e[1;33m\]\D{%H:%M}\[\e[m\] \[\e[47m\e[1;31m\e[7m\] 🐳 \u@\h\[\e[1;31m\]:\[\e[44m\e[1;37m\]\w\[\e[m\]\$ '" >> /root/.bashrc
 
 
+
+# Configurer SSH
 RUN mkdir -p /home/${SSH_USER}/.ssh && \
     chmod 700 /home/${SSH_USER}/.ssh
 
- # Utiliser un secret pour la clé publique
-COPY --chown=${SSH_USER}:${SSH_USER} --chmod=600 ssh_keys/debiantools_id_rsa.pub /home/${SSH_USER}/.ssh/authorized_keys    
+# Copier la clé publique dans le conteneur
+COPY ${PUBKEY} /home/${SSH_USER}/.ssh/authorized_keys
 
+# Définir les bonnes permissions pour le répertoire .ssh et la clé autorisée
+RUN chown -R ${SSH_USER}:${SSH_USER} /home/${SSH_USER}/.ssh && \
+    chmod 600 /home/${SSH_USER}/.ssh/authorized_keys
 
+   
 
 # Générer les clés SSH host
 RUN ssh-keygen -A

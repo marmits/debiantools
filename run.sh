@@ -35,13 +35,16 @@ KEY_PREFIX=${KEY_PREFIX:-"debiantools_id_rsa"}
 PRIVATE_KEY="$KEY_DIR/$KEY_PREFIX"
 PUBLIC_KEY="$PRIVATE_KEY.pub"
 
+
 mkdir -p "$KEY_DIR"
 if [ ! -f "$PRIVATE_KEY" ] || [ ! -f "$PUBLIC_KEY" ]; then
     ssh-keygen -t rsa -b 4096 -f "$PRIVATE_KEY" -N "" -q
-    chmod 600 "$PRIVATE_KEY"
-    chmod 644 "$PUBLIC_KEY"
     echo "Clés SSH générées dans : $PRIVATE_KEY"
 fi
+
+chmod 600 ssh_keys/debiantools_id_rsa
+chmod 644 ssh_keys/debiantools_id_rsa.pub
+
 
 # =============================================
 # PARTIE 3 : GESTION DU CONTENEUR + SSH
@@ -83,10 +86,7 @@ done
 # Vérification du conteneur Docker
 if ! docker ps --filter "name=$CONTAINER_NAME" --format '{{.Status}}' | grep -q "Up"; then
     echo "Démarrage du conteneur $CONTAINER_NAME..."
-    DOCKER_BUILDKIT=1 docker build \
-    --secret id=ssh_pub,src=$PUBLIC_KEY \
-    --secret id=ssh_priv,src=$PRIVATE_KEY \
-    -t $IMAGE_NAME_DEBIAN .
+    docker compose up -d --wait
 fi
 
 # Nettoyage de known_hosts si nécessaire
