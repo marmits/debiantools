@@ -10,7 +10,7 @@ services:
     container_name: ${CONTAINER_NAME_TOOLS:-debian_tools}
     ports:
       - target: 22
-        published: ${TOOLS_PORT_SSH:-2222} # Mappage du port 22 du conteneur vers 2222 sur l'hôte
+        published: ${SSH_PORT:-2222} # Mappage du port 22 du conteneur vers 2222 sur l'hôte
         protocol: tcp
     stdin_open: true #active stdin (équivalent de -i)
     tty: true #active tty (équivalent de -t)

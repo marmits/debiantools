@@ -1,31 +1,71 @@
 #!/bin/bash
 
+# =============================================
+# PARTIE 1 : GESTION DES IMAGES DOCKER
+# =============================================
 
+# Charge les variables depuis .env si le fichier existe
+if [ -f .env ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
 
-# Paramètres configurables avec valeurs par défaut
+# Définit les valeurs par défaut
+BASE_IMAGE=${BASE_IMAGE:-"local/debian:latest"}
+SOURCE_IMAGE="debian:latest"
+
+# Vérifie si l'image source existe localement
+if ! docker image inspect "$SOURCE_IMAGE" &>/dev/null; then
+    echo "Téléchargement de l'image $SOURCE_IMAGE..."
+    docker pull "$SOURCE_IMAGE" || { echo "Échec du téléchargement"; exit 1; }
+fi
+
+# Vérifie si l'image taggée existe déjà
+if ! docker image inspect "$BASE_IMAGE" &>/dev/null; then
+    echo "Création du tag $BASE_IMAGE..."
+    docker tag "$SOURCE_IMAGE" "$BASE_IMAGE" || { echo "Échec du tagging"; exit 1; }
+else
+    echo "L'image $BASE_IMAGE existe déjà"
+fi
+
+# =============================================
+# PARTIE 2 : GÉNÉRATION DES CLÉS SSH
+# =============================================
+KEY_DIR=${KEY_DIR:-"ssh_keys"}
+KEY_PREFIX=${KEY_PREFIX:-"debiantools_id_rsa"}
+PRIVATE_KEY="$KEY_DIR/$KEY_PREFIX"
+PUBLIC_KEY="$PRIVATE_KEY.pub"
+
+mkdir -p "$KEY_DIR"
+if [ ! -f "$PRIVATE_KEY" ] || [ ! -f "$PUBLIC_KEY" ]; then
+    ssh-keygen -t rsa -b 4096 -f "$PRIVATE_KEY" -N "" -q
+    echo "Clés SSH générées dans : $PRIVATE_KEY"
+fi
+
+# =============================================
+# PARTIE 3 : GESTION DU CONTENEUR + SSH
+# =============================================
 CONTAINER_NAME=${CONTAINER_NAME:-"debian_tools"}
 SSH_USER=${SSH_USER:-"debian"}
 SSH_PORT=${SSH_PORT:-2222}
 SSH_HOST=${SSH_HOST:-"localhost"}
-SSH_KEY=${SSH_KEY:-"SSH_KEY"}
-
-# Nettoyage des clés SSH connues
-
 
 # Fonction d'aide
 usage() {
-    echo "Usage: $0 --ssh-key PATH_TO_KEY"
-    echo "Les options suivantes sont obligatoires : --ssh-key"
-    echo "Variables d'environnement alternatives (non obligatoires) :"
-    echo "  CONTAINER_NAME, SSH_USER, SSH_PORT"
-    exit 1
+    echo "Usage: $0 [--ssh-key PATH_TO_KEY]"
+    echo "Options:"
+    echo "  --ssh-key    Utiliser une clé SSH personnalisée (par défaut: $PRIVATE_KEY)"
+    exit 0
 }
 
 # Traitement des arguments
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --ssh-key)
-            SSH_KEY="$2"
+            if [ ! -f "$2" ]; then
+                echo "Erreur: Clé SSH introuvable à $2"
+                exit 1
+            fi
+            PRIVATE_KEY="$2"
             shift 2
             ;;
         -h|--help)
@@ -38,39 +78,19 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Vérifier si SSH_KEY a été définie
-if [ -z "$SSH_KEY" ]; then
-    echo "Erreur: L'option --ssh-key est obligatoire."
-    usage
-fi
-
-# Vérifier si le container est déjà en cours d'exécution
+# Vérification du conteneur Docker
 if ! docker ps --filter "name=$CONTAINER_NAME" --format '{{.Status}}' | grep -q "Up"; then
-    echo "Démarrage des containers..."
+    echo "Démarrage du conteneur $CONTAINER_NAME..."
     docker compose up -d --wait
-else
-    echo "Le container $CONTAINER_NAME est déjà en cours d'exécution"
 fi
 
-# Vérification de la clé SSH
-if [ ! -f "$SSH_KEY" ]; then
-    echo "Erreur: Clé SSH introuvable à $SSH_KEY"
-    exit 1
-fi
-
-# Vérification de la clé SSH
-if [ ! -f "$SSH_KEY" ]; then
-echo "Erreur: Clé SSH introuvable à $SSH_KEY"
-exit 1
-fi
-
-# Vérifier si la clé du serveur a changé (sans supprimer si première connexion)
-if ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -p $SSH_PORT -i "$SSH_KEY" $SSH_USER@$SSH_HOST true 2>&1 | grep -q "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED"; then
-echo "La clé du serveur a changé, nettoyage de l'entrée known_hosts..."
-ssh-keygen -R "[$SSH_HOST]:$SSH_PORT" 2>/dev/null || true
+# Nettoyage de known_hosts si nécessaire
+if ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no \
+   -p "$SSH_PORT" -i "$PRIVATE_KEY" "$SSH_USER@$SSH_HOST" true 2>&1 | grep -q "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED"; then
+    echo "Nettoyage de l'entrée known_hosts pour [$SSH_HOST]:$SSH_PORT..."
+    ssh-keygen -R "[$SSH_HOST]:$SSH_PORT" 2>/dev/null || true
 fi
 
 # Connexion SSH
-echo "Connexion avec la clé: $SSH_KEY"
-ssh -p $SSH_PORT -i "$SSH_KEY" $SSH_USER@$SSH_HOST
-
+echo "Connexion à $SSH_USER@$SSH_HOST (port $SSH_PORT) avec la clé : $PRIVATE_KEY"
+ssh -p "$SSH_PORT" -i "$PRIVATE_KEY" "$SSH_USER@$SSH_HOST"
