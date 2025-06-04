@@ -10,7 +10,7 @@ services:
     container_name: ${CONTAINER_NAME_TOOLS:-debian_tools}
     ports:
       - target: 22
-        published: ${TOOLS_PORT_SSH:-2222} # Mappage du port 22 du conteneur vers 2222 sur l'hôte
+        published: ${SSH_PORT:-2222} # Mappage du port 22 du conteneur vers 2222 sur l'hôte
         protocol: tcp
     stdin_open: true #active stdin (équivalent de -i)
     tty: true #active tty (équivalent de -t)
@@ -20,6 +20,9 @@ services:
     volumes:
       - ./datas:/datas
       - ./startup:/startup
+    secrets:    
+      - source: ssh_public_key
+        target: /run/secrets/ssh_public_key
     tmpfs:
       - /tmp:size=100m #éphémère en RAM
     deploy:
@@ -28,7 +31,6 @@ services:
           memory: 2g  # Maximum
           #cpus: "2"  # Maximum : 50% d'un cœur physique
           cpus: "0.5"  # Maximum : 50% d'un cœur physique
-          pids: 100  # Nombre max de processus
         reservations:
           memory: 1g  # Minimum garanti
           #cpus: "1" # Minimum garanti : 25% d'un cœur
@@ -36,9 +38,12 @@ services:
     networks:
       - my-ipv6-net
 
+secrets:
+  ssh_public_key:
+    file: ${KEY_DIR}/${KEY_PREFIX}.pub
+
 volumes:
   datas:
-  ssh-keys:
   startup:
 
 networks:
