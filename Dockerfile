@@ -70,21 +70,24 @@ RUN --mount=type=secret,id=ssh_pub \
 # Générer les clés SSH host
 RUN ssh-keygen -A
 
-COPY --link --chmod=600 config/rsyslog-ssh.conf /etc/rsyslog.d/sshd.conf
+COPY --chmod=600 config/rsyslog-ssh.conf /etc/rsyslog.d/sshd.conf
 RUN dos2unix /etc/rsyslog.d/sshd.conf
 
-COPY --link --chmod=600 config/ssh_config/sshd_config.conf /etc/ssh/sshd_config
+COPY --chmod=600 config/ssh_config/sshd_config.conf /etc/ssh/sshd_config
 RUN dos2unix /etc/ssh/sshd_config
 
+# Copier les fichiers de démarrage pour docker-entrypoint.sh
+COPY --chmod=755 startup/ /startup/
+
 # Copier le script d'entrée
-COPY --link --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN dos2unix /usr/local/bin/docker-entrypoint.sh
 
 #shell par défaut
 RUN chsh -s /bin/bash ${SSH_USER}
 
 EXPOSE 22
-RUN dos2unix /usr/local/bin/docker-entrypoint.sh
+
 
 
 #Pour les systèmes de supervision (comme Docker Swarm, Kubernetes, Portainer, etc.).

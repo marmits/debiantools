@@ -27,7 +27,7 @@ if ! docker image inspect "$BASE_IMAGE" &>/dev/null; then
 else
     # Vérifie si le conteneur est actif
         if ! docker ps --filter "name=$CONTAINER_NAME_TOOLS" --format '{{.Status}}' | grep -q "Up"; then
-            echo "L'image $BASE_IMAGE présente pour build du container ${CONTAINER_NAME_TOOLS} OK"
+            echo "L'image $BASE_IMAGE présente pour build du container ${CONTAINER_NAME_TOOLS}."
         fi
 fi
 
