@@ -1,5 +1,6 @@
 ## Container docker debian 
-- Permet d'utliser un container debian et d'y accéder en ssh.  
+- Permet d'utliser un container debian et d'y accéder en ssh.
+- Connexion sans mot de passe avec échange de clés (Générées automiquement)
 - Divers outils installés (voir Dokerfile)
 - Pull l'image debian:latest puis création d'une image taguée pour éviter de télécharger sur Docker Hub (Re-Build).
 
