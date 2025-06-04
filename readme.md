@@ -1,66 +1,35 @@
 ## Container docker debian 
-Permet d'utliser un container debian et d'y accéder en ssh.  
-Divers outils installés (voir dokerfile)
-
-## Générer une nouvelle paire de clés SSH
-
-1. Soit utliser le script `generekey.sh`
-
-2. Soit manuellement: 
-dans le répertoire `ssh_keys/`  
-`ssh-keygen -t rsa -b 4096`  
- clé privée :    
- `ssh_keys/debiantools_id_rsa`  
- clé publique :  
- `ssh_keys/debiantools_id_rsa.pub`
+- Permet d'utliser un container debian et d'y accéder en ssh.  
+- Divers outils installés (voir Dokerfile)
+- Pull l'image debian:latest puis création d'une image taguée pour éviter de télécharger sur Docker Hub (Re-Build).
 
 ## Descriptions
 ### entrypoint
-- dossier `/startup` scripts utlisés lors de la fabrication du container par `docker_entrypoint.sh`
+- dossier `/startup` scripts utilisés lors de la fabrication du container par `docker_entrypoint.sh`
 
 ### Description du répertoire datas
 Dossier de données  
 - dossier `bash` scripts disponibles à éxécuter une fois connecté dans le container.
 
-
 ## Installation des images
-Installer l'image et la taguer:   
-(Permet d'avoir une copie locale pour ne pas re-télécharger à chaque fois lors d'un build, l'image de base sur Docker Hub)  
-voir: [Wiki](https://marmits.com/wiki/Docker_Images) 
-`docker pull debian:latest`   
-puis   
-`docker tag debian:latest local/debian:latest`     
 
-## Lancer le container
-`docker compose up --wait`
-
-## Entrer dans le container
-`ssh debian@localhost -p 2222 -i /dir_projet/ssh_keys/debiantools_id_rsa`
-
-
-## (Raccourci) Démarrer via script ou make
+## Démarrer via script ou make
 Dans le répertoire du projet:   
-`./run.sh --ssh-key chemin_de_la_cle_ssh`   
+`./run.sh`  
 ou  
-`make run SSH_KEY=chemin_de_la_cle_ssh`  
+`./run.sh --ssh-key chemin_de_la_cle_ssh` (La clé publique correspondant doit se trouvée dans le container)   
+ou  
+`make`  
 
-## Clé SSH changé 
+## Clé SSH changée
 Si SSH a détecté que la clé d'identité du serveur distant a changé, car le serveur a été réinstallé ou modifié (cas fréquent en développement ou en local).  
 Lancer la commande :  
 `ssh-keygen -f ~/.ssh/known_hosts -R [localhost]:2222`
 
+## Commandes
 
-## Commande 
-
-## Reconstruit proprement
-`docker-compose down -v && docker-compose up --build -d`
--v : Supprime aussi les volumes associés (attention, peut effacer des données persistantes).
--d : relance en arrière-plan
-
-### Commandes docker
-voir fichiers :
-* `docker-stop.sh` => stop et supprime tous les containers
-* `docker-clean.sh` => stop, supprime les containers, les images et les volumes
+### Commandes de gestion docker
+voir fichiers bash dans répertoire `tools_docker/` du projet.
 
 ### Tools or Not
 
