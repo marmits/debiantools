@@ -10,6 +10,7 @@ if [ -f .env ]; then
 fi
 
 # Définit les valeurs par défaut
+IMAGE_NAME_DEBIAN=${IMAGE_NAME_DEBIAN:-"debian12"}
 BASE_IMAGE=${BASE_IMAGE:-"local/debian:latest"}
 SOURCE_IMAGE="debian:latest"
 
@@ -40,6 +41,9 @@ if [ ! -f "$PRIVATE_KEY" ] || [ ! -f "$PUBLIC_KEY" ]; then
     ssh-keygen -t rsa -b 4096 -f "$PRIVATE_KEY" -N "" -q
     echo "Clés SSH générées dans : $PRIVATE_KEY"
 fi
+
+chmod 600 ssh_keys/debiantools_id_rsa
+chmod 644 ssh_keys/debiantools_id_rsa.pub
 
 # =============================================
 # PARTIE 3 : GESTION DU CONTENEUR + SSH
@@ -80,7 +84,9 @@ done
 
 # Vérification du conteneur Docker
 if ! docker ps --filter "name=$CONTAINER_NAME" --format '{{.Status}}' | grep -q "Up"; then
-    echo "Démarrage du conteneur $CONTAINER_NAME..."
+    echo "Démarrage du conteneur $CONTAINER_NAME..."    
+    DOCKER_BUILDKIT=1 docker build --secret id=ssh_pub,src=./ssh_keys/debiantools_id_rsa.pub -t $IMAGE_NAME_DEBIAN .
+    # => voir Dockerfile => RUN --mount=type=secret,id=ssh_pub
     docker compose up -d --wait
 fi
 
