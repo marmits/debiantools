@@ -1,19 +1,15 @@
 # Build Container Image
 # par default debian:latest peut être surchargé via le .env qui transit via compose.yml
+
+# Déclaration des ARG avec valeurs par défaut
 ARG BASE_IMAGE=debian:latest
-FROM ${BASE_IMAGE} AS tools
+FROM ${BASE_IMAGE} AS ssh
+
+ARG TZ=America/New_York
+ARG SSH_USER=debian
 
 LABEL org.opencontainers.image.authors="Marmits" \
       org.opencontainers.image.description="Container image for tools"
-     
-
-# Déclaration des ARG avec valeurs par défaut
-ARG TZ=Europe/Paris
-ARG SSH_USER=debian
-
-# Passage en ENV uniquement pour les variables nécessaires
-ENV TZ=${TZ} \
-    SSH_USER=${SSH_USER}
 
 # Désactive les prompts interactif
 #Force les outils Debian (dpkg, apt) à prendre les valeurs par défaut au lieu de poser des questions.

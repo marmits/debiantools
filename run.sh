@@ -51,7 +51,7 @@ chmod 644 ${PUBLIC_KEY}
 # =============================================
 # PARTIE 3 : GESTION DU CONTENEUR + SSH
 # =============================================
-CONTAINER_NAME=${CONTAINER_NAME:-"debian_tools"}
+CONTAINER_NAME_TOOLS=${CONTAINER_NAME_TOOLS:-"debian_tools"}
 SSH_USER=${SSH_USER:-"debian"}
 SSH_PORT=${SSH_PORT:-2222}
 SSH_HOST=${SSH_HOST:-"localhost"}
@@ -85,13 +85,23 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+
 # Vérification du conteneur Docker
-if ! docker ps --filter "name=$CONTAINER_NAME" --format '{{.Status}}' | grep -q "Up"; then
-    echo "Démarrage du conteneur $CONTAINER_NAME..."    
-    DOCKER_BUILDKIT=1 docker build --secret id=ssh_pub,src=./${PUBLIC_KEY} -t $IMAGE_NAME_DEBIAN .
+if ! docker ps --filter "name=$CONTAINER_NAME_TOOLS" --format '{{.Status}}' | grep -q "Up"; then
+    echo "Démarrage du conteneur $CONTAINER_NAME_TOOLS..."
+
+    DOCKER_BUILDKIT=1 docker build \
+      --target "$TARGET_SSH_DEV" \
+    	--build-arg BASE_IMAGE="$BASE_IMAGE" \
+    	--build-arg TZ="$TZ" \
+    	--build-arg SSH_USER="$SSH_USER" \
+    	--secret id=ssh_pub,src=./${PUBLIC_KEY} \
+    	-t "$IMAGE_NAME_DEBIAN" .
+
     # => voir Dockerfile => RUN --mount=type=secret,id=ssh_pub
     docker compose up -d --wait
 fi
+
 
 # Nettoyage de known_hosts si nécessaire
 if ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no \

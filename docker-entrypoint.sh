@@ -6,7 +6,10 @@ echo "TZ=${TZ}" > /startup/config.env
 # Convertir les fins de ligne du fichier ssh_setup.sh en LF
 find /datas -type f -name "*.sh" -exec dos2unix {} \;
 find /startup -type f -name "*.sh" -exec dos2unix {} \;
-sudo chmod -R +x /datas/bash/*.sh
+sudo chown -R ${SSH_USER}:${SSH_USER} /datas
+sudo chmod -R 755 /datas
+sudo chmod 644 /datas/bash/*.sh
+sudo chmod +x /datas/bash/*.sh
 sudo chmod -R +x /startup/*.sh
 
 
