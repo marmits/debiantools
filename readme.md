@@ -7,7 +7,7 @@
 ### entrypoint
 - dossier `/startup` scripts utilisés lors de la fabrication du container par `docker_entrypoint.sh`
 
-### Description du répertoire datas
+### Description du répertoire datas/
 Dossier de données  
 - dossier `bash` scripts disponibles à éxécuter une fois connecté dans le container.
 
@@ -28,7 +28,7 @@ Lancer la commande :
 
 ## Commandes
 
-### Commandes de gestion docker
+### Gestion docker
 voir fichiers bash dans répertoire `tools_docker/` du projet.
 
 ### Tools or Not
