@@ -1,12 +1,13 @@
 services:
-  tools:
+  sshmarmits:
     image: ${IMAGE_NAME_DEBIAN:-debian12}
     build:
       context: .
-      target: ${TARGET:-tools}
+      target: ${TARGET_SSH_DEV:-marmitstools}
       args:
         BASE_IMAGE: ${BASE_IMAGE:-debian:latest}
-        TZ: ${TZ}
+        TZ: ${TZ:-Europe/Paris}
+        SSH_USER: ${SSH_USER:-debian}
     container_name: ${CONTAINER_NAME_TOOLS:-debian_tools}
     ports:
       - target: 22
@@ -16,7 +17,9 @@ services:
     tty: true #active tty (équivalent de -t)
     restart: on-failure
     environment:
+      BASE_IMAGE: ${BASE_IMAGE}
       TZ: ${TZ}
+      SSH_USER: ${SSH_USER}
     volumes:
       - ./datas:/datas
     secrets:    
