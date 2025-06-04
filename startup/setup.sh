@@ -1,5 +1,5 @@
 #!/bin/sh
-
+# Script custom setup
 SSH_USER=${SSH_USER:-"debian"}
 HOME_DIR="/home/$SSH_USER"
 
@@ -21,4 +21,5 @@ if ! mkdir -p "$HOME_DIR/datas"; then
     echo "Erreur: Impossible de créer le répertoire datas" >&2
     exit 1
 fi
+
 chown "$SSH_USER:$SSH_USER" "$HOME_DIR/datas"

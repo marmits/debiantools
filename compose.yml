@@ -19,7 +19,6 @@ services:
       TZ: ${TZ}
     volumes:
       - ./datas:/datas
-      - ./startup:/startup
     secrets:    
       - source: ssh_public_key
         target: /run/secrets/ssh_public_key
@@ -44,7 +43,6 @@ secrets:
 
 volumes:
   datas:
-  startup:
 
 networks:
   my-ipv6-net:

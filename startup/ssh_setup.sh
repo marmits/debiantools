@@ -1,8 +1,8 @@
 #!/bin/bash
 # Configuration complète du serveur SSH
 
-set -e  # Arrêt en cas d'erreur
 
+set -e  # Arrêt en cas d'erreur
 echo "=== Début de la configuration SSH ==="
 
 # 1. Préparation des répertoires
@@ -58,6 +58,5 @@ fi
 touch /var/log/sshd.log
 chmod 640 /var/log/sshd.log
 chown syslog:adm /var/log/sshd.log
-
 
 echo "=== Configuration SSH terminée avec succès ==="
