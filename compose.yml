@@ -40,7 +40,7 @@ services:
 
 secrets:
   ssh_public_key:
-    file: ./ssh_keys/debiantools_id_rsa.pub
+    file: ${KEY_DIR}/${KEY_PREFIX}.pub
 
 volumes:
   datas:

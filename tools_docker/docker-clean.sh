@@ -7,7 +7,10 @@ docker stop $(docker ps -q)
 docker rm $(docker ps -a -q)
 
 # Supprimer toutes les images
-docker rmi $(docker images -q)
+#docker rmi $(docker images -q)
+# commande plus agressive, forcela suppression des images, même si elles sont utilisées comme base.
+
+docker rmi -f $(docker images -q)
 
 # Supprimer tous les volumes
 docker volume rm $(docker volume ls -q)

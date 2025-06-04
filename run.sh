@@ -25,7 +25,10 @@ if ! docker image inspect "$BASE_IMAGE" &>/dev/null; then
     echo "Création du tag $BASE_IMAGE..."
     docker tag "$SOURCE_IMAGE" "$BASE_IMAGE" || { echo "Échec du tagging"; exit 1; }
 else
-    echo "L'image $BASE_IMAGE existe déjà"
+    # Vérifie si le conteneur est actif
+        if ! docker ps --filter "name=$CONTAINER_NAME_TOOLS" --format '{{.Status}}' | grep -q "Up"; then
+            echo "L'image $BASE_IMAGE présente pour build du container ${CONTAINER_NAME_TOOLS} OK"
+        fi
 fi
 
 # =============================================
@@ -34,7 +37,7 @@ fi
 KEY_DIR=${KEY_DIR:-"ssh_keys"}
 KEY_PREFIX=${KEY_PREFIX:-"debiantools_id_rsa"}
 PRIVATE_KEY="$KEY_DIR/$KEY_PREFIX"
-PUBLIC_KEY="$PRIVATE_KEY.pub"
+PUBLIC_KEY="$KEY_DIR/$KEY_PREFIX.pub"
 
 mkdir -p "$KEY_DIR"
 if [ ! -f "$PRIVATE_KEY" ] || [ ! -f "$PUBLIC_KEY" ]; then
@@ -42,8 +45,8 @@ if [ ! -f "$PRIVATE_KEY" ] || [ ! -f "$PUBLIC_KEY" ]; then
     echo "Clés SSH générées dans : $PRIVATE_KEY"
 fi
 
-chmod 600 ssh_keys/debiantools_id_rsa
-chmod 644 ssh_keys/debiantools_id_rsa.pub
+chmod 600 ${PRIVATE_KEY}
+chmod 644 ${PUBLIC_KEY}
 
 # =============================================
 # PARTIE 3 : GESTION DU CONTENEUR + SSH
@@ -85,7 +88,7 @@ done
 # Vérification du conteneur Docker
 if ! docker ps --filter "name=$CONTAINER_NAME" --format '{{.Status}}' | grep -q "Up"; then
     echo "Démarrage du conteneur $CONTAINER_NAME..."    
-    DOCKER_BUILDKIT=1 docker build --secret id=ssh_pub,src=./ssh_keys/debiantools_id_rsa.pub -t $IMAGE_NAME_DEBIAN .
+    DOCKER_BUILDKIT=1 docker build --secret id=ssh_pub,src=./${PUBLIC_KEY} -t $IMAGE_NAME_DEBIAN .
     # => voir Dockerfile => RUN --mount=type=secret,id=ssh_pub
     docker compose up -d --wait
 fi

@@ -1,18 +1,17 @@
 .PHONY: run help
 
-# Vérification des variables obligatoires
-CHECK_SSH_KEY:
-ifndef SSH_KEY
-	$(error SSH_KEY doit être défini. Usage: make run SSH_KEY=/chemin/vers/cle)
-endif
+# Default target
+run:
+	@echo "Running run.sh with optional SSH_KEY parameter..."
+	@if [ -n "$(SSH_KEY)" ]; then \
+	./run.sh --ssh-key $(SSH_KEY); \
+	else \
+	./run.sh; \
+	fi
 
-run: CHECK_SSH_KEY
-	@./run.sh --ssh-key $(SSH_KEY)
-
+# Display help
 help:
-	@echo "Options obligatoires:"
-	@echo "  SSH_KEY       Chemin vers la clé SSH"
-	@echo ""
-	@echo "Usage:"
-	@echo "  make run SSH_KEY=/chemin/vers/cle"
-	@echo "  make help"
+	@echo "Usage: make [target]"
+	@echo "Targets:"
+	@echo "  help             Display this help message"
+	@echo "  run              Execute run.sh with optional SSH_KEY parameter"
