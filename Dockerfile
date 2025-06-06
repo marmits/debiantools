@@ -23,7 +23,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt -y update && apt -y full-upgrade && \
     apt install -y --no-install-recommends locales libicu-dev libpq-dev acl libzip-dev systemd rsyslog netcat-traditional iproute2 iputils-ping dnsutils git && \
     apt install -y wget less curl jq gzip dos2unix ca-certificates tzdata openssl openssh-server sudo nano htop nmap && \
-    apt install -y pandoc qrencode bsdmainutils cowsay cmatrix && \
+    apt install -y pandoc tmux qrencode bsdmainutils cowsay cmatrix && \
     update-ca-certificates --fresh && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo 'keyboard-configuration keyboard-configuration/layoutcode string fr' > /tmp/debconf-selections && \
@@ -53,6 +53,7 @@ RUN echo "PS1='\[\e[1;33m\]\D{%H:%M}\[\e[m\] \[\e[47m\e[1;30m\e[7m\] 🐳 \u@\h\
     echo "LUNA_CMD='/datas/bash/lune.sh'" >> /home/${SSH_USER}/.bashrc && \
     echo 'alias lune="$LUNA_CMD"' >> /home/${SSH_USER}/.bashrc && \
     echo 'alias moon="$LUNA_CMD"' >> /home/${SSH_USER}/.bashrc && \
+    echo "alias i='/datas/bash/infos.sh'" >> /home/${SSH_USER}/.bashrc && \
     # OU pour un utilisateur spécifique (ex: 'root')
     echo "PS1='\[\e[1;33m\]\D{%H:%M}\[\e[m\] \[\e[47m\e[1;31m\e[7m\] 🐳 \u@\h\[\e[1;31m\]:\[\e[44m\e[1;37m\]\w\[\e[m\]\$ '" >> /root/.bashrc
 
