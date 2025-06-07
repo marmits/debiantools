@@ -20,7 +20,7 @@ show_container_details() {
     
     # Inspection détaillée
     echo -e "\n\033[1;34m📝 Configuration:\033[0m"
-    docker inspect $id | grep -E '(Image|Volumes|Network|"Path"|Status|tmp|HostPort|HostIp|IPAddress|Type|Source|Destination|com.docker.compose.project.working_dir)' | sed 's/^/    /'
+    docker inspect $id | grep -E '(description|Image|Volumes|Network|"Path"|Status|tmp|HostPort|HostIp|IPAddress|Type|Source|Destination|com.docker.compose.project.working_dir)' | sed 's/^/    /'
     
     # Ports exposés
     echo -e "\n\033[1;34m🔌 Ports exposés:\033[0m"

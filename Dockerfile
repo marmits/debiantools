@@ -9,7 +9,7 @@ ARG TZ=America/New_York
 ARG SSH_USER=debian
 
 LABEL org.opencontainers.image.authors="Marmits" \
-      org.opencontainers.image.description="Container image for tools"
+      org.opencontainers.image.description="Debian for tools user sudoers : ${SSH_USER}"
 
 # Désactive les prompts interactif
 #Force les outils Debian (dpkg, apt) à prendre les valeurs par défaut au lieu de poser des questions.
