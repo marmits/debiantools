@@ -43,7 +43,8 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
 # Créer l'utilisateur debian
 RUN useradd -m ${SSH_USER} && \
     echo "${SSH_USER}:secret" | chpasswd && \
-    echo "${SSH_USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    echo "${SSH_USER} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
+    rm -rf /home/${SSH_USER}/.bash_history
     
 
 # Personnaliser le prompt pour tous les utilisateurs

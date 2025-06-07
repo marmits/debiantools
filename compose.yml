@@ -22,6 +22,7 @@ services:
       SSH_USER: ${SSH_USER}
     volumes:
       - ./datas:/datas
+      - ./config/.docker_bash_history:/home/${SSH_USER}/.bash_history
     secrets:    
       - source: ssh_public_key
         target: /run/secrets/ssh_public_key
