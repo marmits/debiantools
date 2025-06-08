@@ -48,7 +48,7 @@ RUN useradd -m ${SSH_USER} && \
     
 
 # Personnaliser le prompt et les alias pour l'utilisateur principal
-RUN echo "PS1='\[\e[1;33m\]\D{%H:%M}\[\e[m\] \[\e[47m\e[1;30m\e[7m\] 🐳 \u@\h\[\e[1;31m\]:\[\e[44m\e[1;37m\]\w\[\e[m\]\$ '" >> /home/${SSH_USER}/.bashrc && \
+RUN echo "PS1='\[\e[38;2;255;10;20m\]\D{%H:%M}\[\e[m\]\[\e[48;2;0;0;0m\e[1;37m\] 🐳 \[\e[38;2;1;166;255m\]\u\[\e[38;2;255;255;255m\]@\h\[\e[48;2;255;0;0m\e[1;37m\]:\[\e[m\]\[\e[44m\e[7;1;37m\]\w\[\e[m\]\[\e[38;2;255;255;255m\]\$ \[\e[38;2;238;150;151m\]'" >> /home/${SSH_USER}/.bashrc && \
     echo "alias meteo='/datas/bash/meteo.sh'" >> /home/${SSH_USER}/.bashrc && \
     echo "LUNA_CMD='/datas/bash/lune.sh'" >> /home/${SSH_USER}/.bashrc && \
     echo 'alias lune="$LUNA_CMD"' >> /home/${SSH_USER}/.bashrc && \
