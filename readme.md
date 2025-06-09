@@ -16,7 +16,7 @@ Dossier de données
 
 ## Installation des images
 
-## Démarrer via script ou make
+## 1. Démarrer via script ou make
 Dans le répertoire du projet:   
 `./run.sh`  
 ou  
@@ -24,8 +24,13 @@ ou
 ou  
 `make`  
 
-## SSH
-`ssh -p 2222 -i ssh_keys/debiantools_id_rsa user@localhost`
+## 2. SSH
+`ssh -p 2222 -i ssh_keys/debiantools_id_rsa user@localhost`  
+ou  
+Lancer le script :  
+`./autoconnect.sh`
+
+***
 
 ## Clé SSH changée
 Si SSH a détecté que la clé d'identité du serveur distant a changé, car le serveur a été réinstallé ou modifié (cas fréquent en développement ou en local).  
