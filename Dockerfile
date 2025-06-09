@@ -93,8 +93,18 @@ EXPOSE 22
 #Pour les systèmes de supervision (comme Docker Swarm, Kubernetes, Portainer, etc.).
 #Pour redémarrer automatiquement un conteneur si le service SSH tombe.
 #Pour diagnostiquer des problèmes de santé du conteneur.
+# Cela signifie que toutes les 30 secondes, Docker envoie une sonde (nc -z) pour vérifier si le port SSH (22) est joignable en local.
+# Cette sonde génère une connexion TCP éphémère sur 127.0.0.1:22, généère des logs sshd :
+#HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+#  CMD nc -z localhost 22 || exit 1
+
+# commande moins intrusive, tester si le processus sshd est en cours d'exécution :
+# Ne génère pas de connexions SSH : Utilise pgrep pour vérifier le processus au lieu de scanner le port.
+# Élimine les logs parasites
+# Si sshd plante, pgrep échoue et le healthcheck retourne unhealthy.    
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-  CMD nc -z localhost 22 || exit 1
+    CMD pgrep sshd >/dev/null || exit 1  
+  
 
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
