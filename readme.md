@@ -24,6 +24,9 @@ ou
 ou  
 `make`  
 
+## SS
+`ssh -p 2222 -i ssh_keys/debiantools_id_rsa user@localhost`
+
 ## Clé SSH changée
 Si SSH a détecté que la clé d'identité du serveur distant a changé, car le serveur a été réinstallé ou modifié (cas fréquent en développement ou en local).  
 Lancer la commande :  
