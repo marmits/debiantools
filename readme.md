@@ -24,7 +24,7 @@ ou
 ou  
 `make`  
 
-## SS
+## SSH
 `ssh -p 2222 -i ssh_keys/debiantools_id_rsa user@localhost`
 
 ## Clé SSH changée
