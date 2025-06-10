@@ -56,3 +56,6 @@ $ `cmatrix -r`
 #### COWSAY
 - $ `cowsay "Hello, World!"`     
 - $ `cowsay -f dragon "I am a dragon! RAWR!"`
+
+### NYANCAT
+- $ `nyancat`
