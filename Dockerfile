@@ -75,7 +75,12 @@ RUN --mount=type=secret,id=ssh_pub \
 RUN ssh-keygen -A
 
 COPY --chmod=600 config/rsyslog-ssh.conf /etc/rsyslog.d/sshd.conf
-RUN dos2unix /etc/rsyslog.d/sshd.conf
+RUN dos2unix /etc/rsyslog.d/sshd.conf && \
+    # Désactiver imklog dans /etc/rsyslog.conf 
+    # imklog tente d'accéder aux logs du noyau Linux (/proc/kmsg), ce qui est désactivé intentionnellement dans les conteneurs pour des raisons de sécurité.
+    sed -i '/module(load="imklog")/d' /etc/rsyslog.conf
+
+
 
 COPY --chmod=600 config/ssh_config/sshd_config.conf /etc/ssh/sshd_config
 RUN dos2unix /etc/ssh/sshd_config
