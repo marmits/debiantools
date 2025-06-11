@@ -3,7 +3,7 @@ services:
     image: ${IMAGE_NAME_DEBIAN:-debian12}
     labels:
       - "description=Système debian 12 Connexion SSH avec Key pass d'un utilisateur sudoers"
-      - "role=Container directement ouvert avec divers outils et programmes utiles ou ktich installés"
+      - "role=Container directement ouvert avec divers outils et programmes utiles ou kitch installés"
       - "maintainer=marmits.com"
     build:
       context: .
