@@ -41,7 +41,7 @@ Lancer la commande :
 `docker exec -it CONTAINER_NAME sshd -T | grep -E "kex|cipher|macs"`  
 => Doit afficher les algorithmes configurés.
 
-### 🔐 **Points forts de votre configuration** :
+### 🔐 **Points forts la configuration** :
 1. **Key Exchange (`kexalgorithms`)** :  
    - `curve25519-sha256@libssh.org` (priorité, le plus sécurisé)  
    - `ecdh-sha2-nistp521`/`nistp384` (backup pour compatibilité)  
