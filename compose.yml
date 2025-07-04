@@ -1,6 +1,9 @@
 services:
   sshmarmits:
     image: ${IMAGE_NAME_DEBIAN:-debian12}
+    env_file:
+      - .env        # Chargé en premier
+      - .env.local  # Surcharge si existe
     labels:
       - "description=Système debian 12 Connexion SSH avec Key pass d'un utilisateur sudoers"
       - "role=Container directement ouvert avec divers outils et programmes utiles ou kitch installés"
@@ -24,12 +27,17 @@ services:
       BASE_IMAGE: ${BASE_IMAGE}
       TZ: ${TZ}
       SSH_USER: ${SSH_USER}
+      GITHUB_TOKEN:
     volumes:
+      - ./.env.local:/app/.env.local
+      - ./.env:/app/.env
       - ./datas:/datas
       - ./config/.docker_bash_history:/home/${SSH_USER}/.bash_history
     secrets:    
       - source: ssh_public_key
         target: /run/secrets/ssh_public_key
+      - source: github_token  # Nouveau secret
+        target: /run/secrets/github_token        
     tmpfs:
       - /tmp:size=100m #éphémère en RAM
     deploy:
@@ -48,6 +56,8 @@ services:
 secrets:
   ssh_public_key:
     file: ${KEY_DIR}/${KEY_PREFIX}.pub
+  github_token:
+    file: ./github_token.txt
 
 volumes:
   datas:

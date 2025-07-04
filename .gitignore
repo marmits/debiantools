@@ -2,3 +2,4 @@
 .vscode
 debiantools_id_rsa
 debiantools_id_rsa.pub
+.env.local

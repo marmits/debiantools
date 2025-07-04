@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+
 echo "TZ=${TZ}" > /startup/config.env
 
 # Sous Windows, les fichiers texte utilisent par défaut les fins de ligne CRLF (\r\n), tandis que sous Linux, c’est LF (\n)
@@ -51,6 +52,13 @@ if [ -f "/startup/setup.sh" ]; then
     /startup/setup.sh
 else
     echo "Warning: Script setup.sh introuvable dans /startup/" >&2
+fi
+
+# authentification github
+if [ -f "/startup/github.sh" ]; then
+    /startup/github.sh
+else
+    echo "Warning: Script github.sh introuvable dans /startup/" >&2
 fi
 
 # Nettoyage des scripts startup après utilisation

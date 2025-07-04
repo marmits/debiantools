@@ -25,6 +25,11 @@ RUN apt -y update && apt -y full-upgrade && \
     apt install -y wget less curl jq gzip dos2unix ca-certificates tzdata openssl openssh-server sudo vim nano htop nmap && \
     apt install -y pandoc tmux qrencode bsdmainutils cowsay cmatrix man-db tree lsof rsync file nyancat && \
     update-ca-certificates --fresh && \
+    #github gist
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    apt install -y gh && \
+    #github gist
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo 'keyboard-configuration keyboard-configuration/layoutcode string fr' > /tmp/debconf-selections && \
     debconf-set-selections /tmp/debconf-selections && \
