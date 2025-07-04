@@ -37,8 +37,7 @@ services:
       - source: ssh_public_key
         target: /run/secrets/ssh_public_key
       - source: github_token  # Nouveau secret
-        target: /run/secrets/github_token
-        mode: 0444
+        target: /run/secrets/github_token        
     tmpfs:
       - /tmp:size=100m #éphémère en RAM
     deploy:
