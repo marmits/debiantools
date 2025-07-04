@@ -41,7 +41,7 @@ Lancer la commande :
 `ssh-keygen -f ~/.ssh/known_hosts -R [localhost]:2222`
 
 ## Audit de sécurité
-`docker exec -it CONTAINER_NAME sshd -T | grep -E "kex|cipher|macs"`  
+`docker exec -it marmits_ssh sshd -T | grep -E "kex|cipher|macs"`  
 => Doit afficher les algorithmes configurés.
 
 ### 🔐 **Points forts la configuration** :
@@ -140,7 +140,7 @@ echo "GITHUB_TOKEN=ghp_lavaleurdutoken > .env.local
 3. TEST : 
 - Depuis la machine hôte:  
 ```bash
-docker exec -it CONTAINER_NAME gh gist create --public /etc/hosts` 
+docker exec -it marmits_ssh gh gist create --public /etc/hosts` 
 ```
 
 - Depuis la machine hôte un fichier sur l'hôte:
