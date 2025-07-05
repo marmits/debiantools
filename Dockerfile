@@ -20,23 +20,33 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Docker utilise /bin/sh -c pour exécuter les commandes RUN. Ce shell est plus léger, mais moins puissant que bash.
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN apt -y update && apt -y full-upgrade && \
-    apt install -y --no-install-recommends locales libicu-dev libpq-dev acl libzip-dev systemd rsyslog netcat-traditional iproute2 iputils-ping dnsutils git && \
-    apt install -y wget less curl jq gzip dos2unix ca-certificates tzdata openssl openssh-server sudo vim nano htop nmap && \
-    apt install -y pandoc tmux qrencode bsdmainutils cowsay cmatrix man-db tree lsof rsync file nyancat && \
-    update-ca-certificates --fresh && \
-    #github gist
+RUN apt-get update -qq && \
+    # D'abord installer curl et ca-certificates
+    apt-get install -y -qq --no-install-recommends curl ca-certificates && \    
+    # Configurer le dépôt GitHub CLI
     curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
-    apt install -y gh && \
-    #github gist
+    # dépôt pour github gist \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \    
+    # Mettre à jour avec le nouveau dépôt et tout installer en une seule opération
+    apt-get update -qq && \
+    apt-get full-upgrade -y -qq && \
+    apt-get install -y -qq --no-install-recommends \
+        locales libicu-dev libpq-dev acl libzip-dev systemd rsyslog \
+        netcat-traditional iproute2 iputils-ping dnsutils git \
+        wget less jq gzip dos2unix tzdata \
+        openssl openssh-server sudo vim nano htop nmap \
+        pandoc tmux qrencode bsdmainutils cowsay cmatrix \
+        man-db tree lsof rsync file nyancat bash-completion gh && \    
+    # Configuration finale
+    update-ca-certificates --fresh && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo 'keyboard-configuration keyboard-configuration/layoutcode string fr' > /tmp/debconf-selections && \
     debconf-set-selections /tmp/debconf-selections && \
+    # Activation de bash-completion pour tous les utilisateurs
+    echo "source /etc/bash_completion" >> /etc/bash.bashrc && \
     rm -f /tmp/debconf-selections && \
-    apt clean && apt autoremove --purge && apt autoclean && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
 
 # Réactive le mode interactif par défaut (bonne pratique)
 ENV DEBIAN_FRONTEND=
@@ -113,14 +123,12 @@ EXPOSE 22
 #  CMD nc -z localhost 22 || exit 1
 
 # commande moins intrusive, tester si le processus sshd est en cours d'exécution :
-# Ne génère pas de connexions SSH : Utilise pgrep pour vérifier le processus au lieu de scanner le port.
-# Élimine les logs parasites
+# Ne génère pas de connexions SSH : Utilise pgrep pour vérifier le processus au lieu de scanner le port.
+# Élimine les logs parasites
 # Si sshd plante, pgrep échoue et le healthcheck retourne unhealthy.    
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD pgrep sshd >/dev/null || exit 1  
   
-
-
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 #lance un shell interactif
 CMD ["/bin/bash -l"]
