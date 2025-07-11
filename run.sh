@@ -10,7 +10,7 @@ if [ -f .env ]; then
 fi
 
 # Définit les valeurs par défaut
-IMAGE_NAME_DEBIAN=${IMAGE_NAME_DEBIAN:-"debian12"}
+IMAGE_NAME_DEBIAN=${IMAGE_NAME_DEBIAN:-"debian_tools"}
 BASE_IMAGE=${BASE_IMAGE:-"local/debian:latest"}
 SOURCE_IMAGE="debian:latest"
 

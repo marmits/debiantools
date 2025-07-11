@@ -1,6 +1,6 @@
 services:
   sshmarmits:
-    image: ${IMAGE_NAME_DEBIAN:-debian12}
+    image: ${IMAGE_NAME_DEBIAN:-debian_tools}
     env_file:
       - .env        # Chargé en premier
       - .env.local  # Surcharge si existe
