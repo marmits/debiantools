@@ -1,7 +1,11 @@
 #!/bin/sh
 set -e
-
 echo "*********************** GITHUB ********************"
+
+
+# Désactive les séquences d'échappement ANSI qui peuvent polluer les logs
+export TERM=dumb
+gh config set prompt disabled
 
 # -------------------------------------------------------------------
 # Nettoyage initial
