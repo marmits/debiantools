@@ -140,7 +140,7 @@ echo "GITHUB_TOKEN=ghp_lavaleurdutoken > .env.local
 3. TEST : 
 - Depuis la machine hôte:  
 ```bash
-docker exec -it marmits_ssh gh gist create --public /etc/hosts` 
+docker exec -it marmits_ssh gh gist create --public /etc/hosts 
 ```
 
 - Depuis la machine hôte un fichier sur l'hôte:
