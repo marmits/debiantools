@@ -36,7 +36,7 @@ RUN apt-get update -qq && \
         wget less jq gzip dos2unix tzdata \
         openssl openssh-server sudo vim nano htop nmap \
         pandoc tmux qrencode bsdmainutils cowsay cmatrix \
-        man-db tree lsof rsync file nyancat bash-completion gh && \    
+        man-db tree lsof rsync file nyancat bash-completion gh fastfetch && \    
     # Configuration finale
     update-ca-certificates --fresh && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
