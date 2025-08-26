@@ -12,7 +12,7 @@ services:
       context: .
       target: ${TARGET_SSH_DEV:-marmitstools}
       args:
-        BASE_IMAGE: ${BASE_IMAGE:-debian:latest}
+        BASE_IMAGE: ${BASE_IMAGE:-debian:12}
         TZ: ${TZ:-Europe/Paris}
         SSH_USER: ${SSH_USER:-debian}
     container_name: ${CONTAINER_NAME_TOOLS:-debian_tools}
