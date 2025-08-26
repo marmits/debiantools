@@ -2,7 +2,7 @@
 # par default debian:latest peut être surchargé via le .env qui transit via compose.yml
 
 # Déclaration des ARG avec valeurs par défaut
-ARG BASE_IMAGE=debian:latest
+ARG BASE_IMAGE=debian:12
 FROM ${BASE_IMAGE} AS ssh
 
 ARG TZ=America/New_York
@@ -36,7 +36,11 @@ RUN apt-get update -qq && \
         wget less jq gzip dos2unix tzdata \
         openssl openssh-server sudo vim nano htop nmap \
         pandoc tmux qrencode bsdmainutils cowsay cmatrix \
-        man-db tree lsof rsync file nyancat bash-completion gh fastfetch && \    
+        man-db tree lsof rsync file nyancat bash-completion gh && \    
+    # Installer fastfetch depuis GitHub (dernière release)
+    wget -q https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.deb -O /tmp/fastfetch.deb && \
+    apt-get install -y /tmp/fastfetch.deb && \
+    rm /tmp/fastfetch.deb && \
     # Configuration finale
     update-ca-certificates --fresh && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
