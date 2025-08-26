@@ -2,7 +2,7 @@
 # par default debian:latest peut être surchargé via le .env qui transit via compose.yml
 
 # Déclaration des ARG avec valeurs par défaut
-ARG BASE_IMAGE=debian:12
+ARG BASE_IMAGE=debian:latest
 FROM ${BASE_IMAGE} AS ssh
 
 ARG TZ=America/New_York

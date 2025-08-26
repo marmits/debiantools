@@ -5,14 +5,14 @@ services:
       - .env        # Chargé en premier
       - .env.local  # Surcharge si existe
     labels:
-      - "description=Système debian 12 Connexion SSH avec Key pass d'un utilisateur sudoers"
+      - "description=Système debian 13 Connexion SSH avec Key pass d'un utilisateur sudoers"
       - "role=Container directement ouvert avec divers outils et programmes utiles ou kitch installés"
       - "maintainer=marmits.com"
     build:
       context: .
       target: ${TARGET_SSH_DEV:-marmitstools}
       args:
-        BASE_IMAGE: ${BASE_IMAGE:-debian:12}
+        BASE_IMAGE: ${BASE_IMAGE:-debian:latest}
         TZ: ${TZ:-Europe/Paris}
         SSH_USER: ${SSH_USER:-debian}
     container_name: ${CONTAINER_NAME_TOOLS:-debian_tools}
