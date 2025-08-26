@@ -11,8 +11,8 @@ fi
 
 # Définit les valeurs par défaut
 IMAGE_NAME_DEBIAN=${IMAGE_NAME_DEBIAN:-"debian_tools"}
-BASE_IMAGE=${BASE_IMAGE:-"local/debian:12"}
-SOURCE_IMAGE="debian:12"
+BASE_IMAGE=${BASE_IMAGE:-"local/debian:latest"}
+SOURCE_IMAGE="debian:latest"
 
 # Vérifie si l'image source existe localement
 if ! docker image inspect "$SOURCE_IMAGE" &>/dev/null; then
