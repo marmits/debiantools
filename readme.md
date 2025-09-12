@@ -151,7 +151,15 @@ cat unfichier.txt | docker exec -i marmits_ssh gh gist create --public -f "nom_t
 - Dans le container:
 ```bash
 sudo gh gist create --public /etc/hosts
+
+# avec alias
+gist --help
+gist /chemin/unfichier public
+gist /chemin/unfichier
+
 ```
+
+
 4. .bashrc (alias)
 ```bash
 #Alias pour envoyer un fichier vers Gist via Docker
