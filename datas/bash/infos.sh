@@ -17,3 +17,4 @@ echo "  shell: $SHELL"
 echo "  $(bash --version | head -n 1)"
 echo -e "\e[1;34m💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣\e[0m"
 fastfetch
+/datas/bash/apt_log_commands_only.sh
