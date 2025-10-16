@@ -36,7 +36,18 @@ show_container_details() {
     echo -e "\n\033[1;34m📜 Logs (20 dernières lignes):\033[0m"
     docker logs --tail=20 $id 2>&1 | sed 's/^/    /'
     
-    read -p $'\n\033[1;33mAppuyez sur Entrée pour continuer...\033[0m'
+    echo -e "\n\033[1;33mOptions:\033[0m"
+    echo " 1 - Lancer un shell (sh) dans le conteneur"
+    echo " 0 - Retour au menu principal"
+    read -p "Votre choix: " subchoice
+    case $subchoice in
+        1)
+            echo -e "\n\033[1;32mConnexion au shell du conteneur $name...\033[0m"
+            docker exec -it $id bash
+            ;;
+        *)
+            ;;
+    esac
 }
 
 # Menu principal
