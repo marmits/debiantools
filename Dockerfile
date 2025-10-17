@@ -37,11 +37,7 @@ RUN apt-get update -qq && \
         openssl openssh-server sudo vim nano htop nmap \
         pandoc tmux qrencode bsdmainutils cowsay cmatrix \
         man-db tree lsof rsync file nyancat bash-completion gh \
-	    ghostscript img2pdf pdftk && \
-    # Installer fastfetch depuis GitHub (dernière release)
-    wget -q https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.deb -O /tmp/fastfetch.deb && \
-    apt-get install -y /tmp/fastfetch.deb && \
-    rm /tmp/fastfetch.deb && \
+	    fastfetch ghostscript img2pdf pdftk && \
     # Configuration finale
     update-ca-certificates --fresh && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
