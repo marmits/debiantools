@@ -69,7 +69,8 @@ RUN echo "PS1='\[\e[38;2;255;10;20m\]\D{%H:%M}\[\e[m\]\[\e[48;2;0;0;0m\e[1;37m\]
     echo "LUNA_CMD='/datas/bash/lune.sh'" >> /home/${SSH_USER}/.bashrc && \
     echo 'alias lune="$LUNA_CMD"' >> /home/${SSH_USER}/.bashrc && \
     echo 'alias moon="$LUNA_CMD"' >> /home/${SSH_USER}/.bashrc && \
-    echo "alias i='/datas/bash/infos.sh'" >> /home/${SSH_USER}/.bashrc && \
+    echo "alias ff='fastfetch'" >> /home/${SSH_USER}/.bashrc && \
+    echo "alias i='/datas/bash/infos.sh && ff'" >> /home/${SSH_USER}/.bashrc && \
     echo "alias gist='/datas/bash/gist.sh'" >> /home/${SSH_USER}/.bashrc && \
     echo "export LANG=fr_FR.UTF-8" >> /home/${SSH_USER}/.bashrc && \
     echo "export LC_ALL=fr_FR.UTF-8" >> /home/${SSH_USER}/.bashrc && \
@@ -110,7 +111,7 @@ COPY --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN dos2unix /usr/local/bin/docker-entrypoint.sh
 
 #shell par défaut
-RUN chsh -s /bin/bash ${SSH_USER}
+RUN chsh -s /bin/bash ${SSH_USER} && echo "ff" >> /home/${SSH_USER}/.bashrc
 
 EXPOSE 22
 

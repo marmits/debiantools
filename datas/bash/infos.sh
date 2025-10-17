@@ -16,5 +16,8 @@ echo -e "  Uptime container: \e[1;32m$(cat /tmp/container_uptime 2>/dev/null || 
 echo "  shell: $SHELL"
 echo "  $(bash --version | head -n 1)"
 echo -e "\e[1;34m💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣💣\e[0m"
-fastfetch
+
 /datas/bash/apt_log_commands_only.sh
+
+echo -e "\e[1;34m🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧🐧\e[0m"
+
