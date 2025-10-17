@@ -32,7 +32,7 @@ RUN apt-get update -qq && \
     apt-get full-upgrade -y -qq && \
     apt-get install -y -qq --no-install-recommends \
         locales libicu-dev libpq-dev acl libzip-dev systemd rsyslog \
-        netcat-traditional iproute2 iputils-ping dnsutils git \
+        netcat-traditional iproute2 iputils-ping bind9-dnsutils git \
         wget less jq gzip dos2unix tzdata \
         openssl openssh-server sudo vim nano htop nmap \
         pandoc tmux qrencode bsdmainutils cowsay cmatrix \
