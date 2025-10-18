@@ -20,7 +20,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Docker utilise /bin/sh -c pour exécuter les commandes RUN. Ce shell est plus léger, mais moins puissant que bash.
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-COPY --chmod=600 /config/debian.sources /etc/apt/sources.list.d/debian.sources
+COPY --chmod=644 /config/debian.sources /etc/apt/sources.list.d/debian.sources
 
 RUN apt-get update -qq && \
     # D'abord installer curl et ca-certificates
