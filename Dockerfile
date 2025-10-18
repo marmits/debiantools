@@ -20,6 +20,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Docker utilise /bin/sh -c pour exécuter les commandes RUN. Ce shell est plus léger, mais moins puissant que bash.
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
+COPY --chmod=600 /config/debian.sources /etc/apt/sources.list.d/debian.sources
+
 RUN apt-get update -qq && \
     # D'abord installer curl et ca-certificates
     apt-get install -y -qq --no-install-recommends curl ca-certificates && \    
@@ -35,9 +37,11 @@ RUN apt-get update -qq && \
         netcat-traditional iproute2 iputils-ping bind9-dnsutils git \
         wget less jq gzip dos2unix tzdata \
         openssl openssh-server sudo vim nano htop nmap \
-        pandoc tmux qrencode bsdmainutils cowsay cmatrix \
+        pandoc tmux qrencode bsdutils cowsay cmatrix \
         man-db tree lsof rsync file nyancat bash-completion gh \
-	    fastfetch ghostscript img2pdf pdftk && \
+        fastfetch ghostscript img2pdf pdftk \
+        zip unzip whois bat bc caca-utils duf btop imagemagick traceroute \
+        inxi translate-shell tty-clock && \
     # Configuration finale
     update-ca-certificates --fresh && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
@@ -72,6 +76,7 @@ RUN echo "PS1='\[\e[38;2;255;10;20m\]\D{%H:%M}\[\e[m\]\[\e[48;2;0;0;0m\e[1;37m\]
     echo "alias ff='fastfetch'" >> /home/${SSH_USER}/.bashrc && \
     echo "alias i='/datas/bash/infos.sh && ff'" >> /home/${SSH_USER}/.bashrc && \
     echo "alias gist='/datas/bash/gist.sh'" >> /home/${SSH_USER}/.bashrc && \
+    echo "alias bat='batcat'" >> /home/${SSH_USER}/.bashrc && \ 
     echo "export LANG=fr_FR.UTF-8" >> /home/${SSH_USER}/.bashrc && \
     echo "export LC_ALL=fr_FR.UTF-8" >> /home/${SSH_USER}/.bashrc && \
     # OU pour un utilisateur spécifique (ex: 'root')
