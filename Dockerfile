@@ -77,6 +77,7 @@ RUN echo "PS1='\[\e[38;2;255;10;20m\]\D{%H:%M}\[\e[m\]\[\e[48;2;0;0;0m\e[1;37m\]
     echo "alias i='/datas/bash/infos.sh && ff'" >> /home/${SSH_USER}/.bashrc && \
     echo "alias gist='/datas/bash/gist.sh'" >> /home/${SSH_USER}/.bashrc && \
     echo "alias bat='batcat'" >> /home/${SSH_USER}/.bashrc && \ 
+    echo "alias clock='tty-clock -sScC 1'" >> /home/${SSH_USER}/.bashrc && \ 
     echo "export LANG=fr_FR.UTF-8" >> /home/${SSH_USER}/.bashrc && \
     echo "export LC_ALL=fr_FR.UTF-8" >> /home/${SSH_USER}/.bashrc && \
     # OU pour un utilisateur spécifique (ex: 'root')
