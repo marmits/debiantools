@@ -40,7 +40,7 @@ RUN apt-get update -qq && \
         pandoc tmux qrencode bsdutils cowsay cmatrix \
         man-db tree lsof rsync file nyancat bash-completion gh \
         fastfetch ghostscript img2pdf pdftk \
-        zip unzip whois bat bc caca-utils duf btop imagemagick traceroute \
+        zip unzip whois bat bc caca-utils aasvg duf btop imagemagick traceroute \
         inxi translate-shell tty-clock && \
     # Configuration finale
     update-ca-certificates --fresh && \
