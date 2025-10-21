@@ -3,7 +3,8 @@
 # puis génére un logo svg à partir du logo ascii (txt)
 
 # converti en ascii couleur
-img2txt -W 100 -x 1 -y 2 casque.png > output/casque.txt
+#img2txt -W 100 -x 1 -y 2 casque.png > output/casque.txt
+img2txt -W 150 -x 1 -y 2 -d fstein -b 0.35 -c 1.8 -g 0.8 -f ansi casque.png > output/casque.txt 
 
 
 python3 ansi2svg_pure.py output/casque.txt output/casque-grey.svg \

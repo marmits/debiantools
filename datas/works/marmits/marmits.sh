@@ -3,7 +3,8 @@
 # puis génére un logo svg à partir du logo ascii (txt)
 
 # converti en ascii couleur
-img2txt -W 100 -x 1 -y 2 marmits.png > output/marmits.txt
+#img2txt -W 100 -x 1 -y 2 marmits.png > output/marmits.txt
+img2txt -W 150 -x 1 -y 2 -d fstein -b 0.35 -c 1.8 -g 0.8 -f ansi marmits.png > output/marmits.txt
 
 #Convertir 1;30 → 90 (bright black = gris).
 # 1;30 => 90  (avec ou sans 0; en tête, et avec ou sans ;40)
@@ -28,3 +29,4 @@ python3 ansi2svg_pure.py output/marmits.norm.txt output/marmits-grey.svg \
   --bg none \
   --char-width-ratio 0.6 \
   --margin 10
+
