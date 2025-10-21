@@ -40,7 +40,7 @@ RUN apt-get update -qq && \
         pandoc tmux qrencode bsdutils cowsay cmatrix \
         man-db tree lsof rsync file nyancat bash-completion gh \
         fastfetch ghostscript img2pdf pdftk \
-        zip unzip whois bat bc caca-utils aasvg duf btop imagemagick traceroute \
+        zip unzip whois bat bc caca-utils aasvg golang-go chafa duf btop imagemagick traceroute \
         inxi translate-shell tty-clock && \
     # Configuration finale
     update-ca-certificates --fresh && \
@@ -55,6 +55,11 @@ RUN apt-get update -qq && \
 
 # Réactive le mode interactif par défaut (bonne pratique)
 ENV DEBIAN_FRONTEND=
+
+# Installe a2s en root puis le rend global
+ENV GOPATH=/root/go
+RUN GO111MODULE=on go install github.com/asciitosvg/asciitosvg/cmd/a2s@latest \
+ && install -m 0755 /root/go/bin/a2s /usr/local/bin/a2s
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     echo "fr_FR.UTF-8 UTF-8" >> /etc/locale.gen && \
