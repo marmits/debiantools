@@ -125,7 +125,7 @@ $ `cmatrix -r`
 - [Image => ASCII => SVG](https://marmits.com/wiki/Image_vers_ASCII_vers_SVG)
 
 #### Logiciels pour terminal 
-- [Terminal](https://marmits.com/wiki/Cat%C3%A9gorie:Terminal)
+- [Terminal Tools](https://marmits.com/wiki/Cat%C3%A9gorie:Terminal_Tools)
 
 #### gist.github.com
 1. **Créer le token**
