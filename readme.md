@@ -118,6 +118,8 @@ $ `cmatrix -r`
 #### GHOSTSCRIPT IMG2PDF PDFTK
 - [tools PDF](https://marmits.com/wiki/Linux_tools_PDF)
 
+#### Conversion d’une image en ASCII puis en SVG
+- [Image => ASCII => SVG](https://marmits.com/wiki/Image_vers_ASCII_vers_SVG)
 
 #### gist.github.com
 1. **Créer le token**
