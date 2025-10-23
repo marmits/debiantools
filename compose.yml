@@ -33,6 +33,8 @@ services:
       - ./.env:/app/.env
       - ./datas:/datas
       - ./config/.docker_bash_history:/home/${SSH_USER}/.bash_history
+      - ./secrets/gnupg:/home/${SSH_USER}/.gnupg
+      - ./secrets/password-store:/home/${SSH_USER}/.password-store
     secrets:    
       - source: ssh_public_key
         target: /run/secrets/ssh_public_key

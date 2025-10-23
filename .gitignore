@@ -3,3 +3,16 @@
 debiantools_id_rsa
 debiantools_id_rsa.pub
 .env.local
+# Ignore tout sauf le dossier secrets (vide)
+
+
+
+
+# Ignorer contenu de secrets mais garder le dossier
+secrets/*
+!secrets/.gitkeep
+
+# Ignorer contenu de datas/works/marmits/output mais garder le dossier
+datas/works/marmits/output/*
+!datas/works/marmits/output/.gitkeep
+

@@ -56,6 +56,13 @@ else
     echo "Warning: Script github.sh introuvable dans /startup/" >&2
 fi
 
+############# pass ######################
+# Unix pass
+if [ -f "/startup/pass.sh" ]; then
+    /startup/pass.sh
+else
+    echo "Warning: Script pass.sh introuvable dans /startup/" >&2
+fi
 
 ############# setup ######################
 # Initialiser la configuration des fichiers et répertoires via le script externe

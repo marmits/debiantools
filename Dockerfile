@@ -42,7 +42,8 @@ RUN apt-get update -qq && \
         fastfetch ghostscript img2pdf pdftk \
         zip unzip whois bat bc caca-utils aasvg golang-go chafa duf btop imagemagick traceroute \
         inxi translate-shell tty-clock \
-        make iperf3 fzf eza fd-find tealdeer mtr-tiny figlet toilet && \
+        make iperf3 fzf eza fd-find tealdeer mtr-tiny figlet toilet \
+        pass gnupg dirmngr pinentry-tty && \
     # Configuration finale
     update-ca-certificates --fresh && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
@@ -56,6 +57,15 @@ RUN apt-get update -qq && \
 
 # Réactive le mode interactif par défaut (bonne pratique)
 ENV DEBIAN_FRONTEND=
+
+
+# Variables runtime pour GnuPG/pass (après l’installation)
+ENV GPG_TTY=/dev/tty \
+    PASSWORD_STORE_DIR=/home/${SSH_USER}/.password-store
+
+# Sélectionne pinentry-tty comme implémentation par défaut
+RUN update-alternatives --set pinentry /usr/bin/pinentry-tty
+
 
 # Installe a2s en root puis le rend global
 ENV GOPATH=/root/go
