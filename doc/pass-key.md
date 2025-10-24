@@ -43,7 +43,7 @@ gpg --import-ownertrust </datas/keys/ownertrust.txt # si tu as exporté l'ownert
 # Toujours en tant que debian dans le container
 export PASSWORD_STORE_DIR="$HOME/.password-store"
 pass init 1234ABCD5678EF90     # utilise l'ID/empreinte de ta clé GPG
-pass insert system/ssh/vps-root
+pass insert system/ssh/vps-root ou pass add system/ssh/vps-root ou  
 pass show system/ssh/vps-root
 ```
 
@@ -66,6 +66,20 @@ pass git push -u origin main
 
 > Astuce: `pass` propage les commandes git (`pass git <cmd>`), donc `pass git status`, `pass git pull`, etc., directement depuis le store.
 
+
+### **Contexte**
+
+`pass` (le gestionnaire de mots de passe Unix) stocke tes secrets dans des fichiers chiffrés GPG sous `~/.password-store`. Comme ce sont des fichiers texte, tu peux les **versionner avec Git** pour :
+
+*   **Sauvegarder l’historique** des changements (ajout/suppression de mots de passe).
+*   **Synchroniser** ton store entre plusieurs machines via un dépôt distant (GitHub, GitLab, etc.).
+*   **Restaurer** facilement en cas de perte.
+
+### **Pourquoi utiliser `pass git` plutôt que `git` directement ?**
+
+*   `pass git` est un wrapper qui s’assure que les opérations Git se font dans le bon dossier (`~/.password-store`).
+*   Tu peux faire `pass git pull`, `pass git push` sans te déplacer dans le dossier.
+
 ***
 
 ## 4) **Sécurité & bonnes pratiques**
@@ -80,8 +94,6 @@ pass git push -u origin main
 *   **Windows/WSL2**: si tu lances Docker Desktop sous Windows, les ACL hôte peuvent différer. Le `chmod` dans l’entrypoint remet les droits corrects **dans** le conteneur même si le FS hôte ne les applique pas nativement.
 
 ***
-
-
 
 ## 5) Workflow récap
 
@@ -101,4 +113,40 @@ pass git push -u origin main
 *   initialise `pass`,
 *   (optionnel) initialise un remote Git.
 
-Suggestion **générer une nouvelle clé** ou **importer** celle que tu utilises déjà (et veux‑tu activer la sync Git du store)?
+
+## Explication de `dirmngr` et `pinentry-tty`
+***
+
+### **1. `dirmngr`**
+
+*   **Rôle :**  
+    `dirmngr` est un composant de GnuPG qui gère les **connexions réseau pour les clés**.  
+    Il sert principalement à :
+    *   Télécharger des clés publiques depuis des **serveurs de clés** (HKP, LDAP).
+    *   Vérifier les **CRL** (listes de révocation).
+    *   Gérer la communication avec des services externes (par exemple pour la validation des certificats).
+
+*   **Pourquoi utile avec `pass` ?**  
+    Si tu veux importer une clé GPG distante ou vérifier sa validité, `dirmngr` est nécessaire. Sans lui, `gpg --recv-keys` ne fonctionne pas.
+
+***
+
+### **2. `pinentry-tty`**
+
+*   **Rôle :**  
+    `pinentry` est le programme qui affiche la **boîte de dialogue pour saisir ton mot de passe GPG** (passphrase).  
+    Il existe plusieurs variantes :
+    *   `pinentry-gtk` → interface graphique.
+    *   `pinentry-curses` → interface en mode texte.
+    *   `pinentry-tty` → **pur terminal**, idéal pour les scripts ou containers sans UI.
+
+*   **Pourquoi utile avec `pass` ?**  
+    Quand tu fais `pass insert` ou `pass show`, GPG doit déchiffrer avec ta clé privée → il te demande la passphrase.  
+    `pinentry-tty` permet cette saisie directement dans le terminal.
+
+***
+
+✅ **En résumé :**
+
+*   `dirmngr` = communication réseau pour clés GPG.
+*   `pinentry-tty` = saisie sécurisée de la passphrase dans le terminal.
