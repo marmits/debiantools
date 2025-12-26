@@ -2,7 +2,7 @@
 $ `cmatrix -r`
 - [bash fun](https://marmits.com/wiki/Commandes_bash_fun)
 
-#### GHOSTSCRIPT IMG2PDF PDFTK
+#### GHOSTSCRIPT IMG2PDF PDFTK PDFTOTEXT QPDF
 - [tools PDF](https://marmits.com/wiki/Linux_tools_PDF)
 
 #### Outils ASCII

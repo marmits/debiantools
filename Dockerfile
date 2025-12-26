@@ -43,8 +43,9 @@ RUN apt-get update -qq && \
         zip unzip whois bat bc caca-utils aasvg golang-go chafa duf btop imagemagick traceroute \
         inxi translate-shell tty-clock \
         make iperf3 fzf eza fd-find tealdeer mtr-tiny figlet toilet \
-        pass gnupg dirmngr pinentry-tty \
-	ccze && \
+        pass gnupg dirmngr pinentry-tty \        
+	    ccze \
+        poppler-utils qpdf libimage-exiftool-perl && \
     # Configuration finale
     update-ca-certificates --fresh && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
