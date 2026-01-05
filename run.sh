@@ -16,6 +16,9 @@ fi
 IMAGE_NAME_DEBIAN=${IMAGE_NAME_DEBIAN:-"debian_tools"}
 BASE_IMAGE=${BASE_IMAGE:-"local/debian:latest"}
 SOURCE_IMAGE="debian:latest"
+# Valeur par défaut si SSH_OPTS n'est pas défini dans l'environnement
+SSH_OPTS="${SSH_OPTS:--o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null}"
+
 
 # Vérifie si l'image source existe localement
 if ! docker image inspect "$SOURCE_IMAGE" &>/dev/null; then
@@ -115,4 +118,4 @@ fi
 
 # Connexion SSH
 echo "Connexion à $SSH_USER@$SSH_HOST (port $SSH_PORT) avec la clé : $PRIVATE_KEY"
-ssh -p "$SSH_PORT" -i "$PRIVATE_KEY" "$SSH_USER@$SSH_HOST"
+ssh $SSH_OPTS -p "$SSH_PORT" -i "$PRIVATE_KEY" "$SSH_USER@$SSH_HOST"

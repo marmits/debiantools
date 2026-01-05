@@ -1,20 +1,124 @@
-## Installation des images
+# 📘 Démarrage & Connexion SSH
 
-## 1. Démarrer via script ou make
-Dans le répertoire du projet:   
-`./run.sh`  
-ou  
-`./run.sh --ssh-key chemin_de_la_cle_ssh` (La clé publique correspondant doit se trouvée dans le container)   
-ou  
-`make`
+## 🚀 1. Démarrer l’environnement (build + run)
 
-## 2. SSH
-`ssh -p 2222 -i ssh_keys/debiantools_id_rsa user@localhost`  
-ou  
-Lancer le script :  
-`./autoconnect.sh`
+Dans le répertoire du projet :
 
-## 3. Clé SSH changée
-Si SSH a détecté que la clé d'identité du serveur distant a changé, car le serveur a été réinstallé ou modifié (cas fréquent en développement ou en local).  
-Lancer la commande :  
-`ssh-keygen -f ~/.ssh/known_hosts -R [localhost]:2222`
+### Méthode recommandée
+
+```bash
+./run.sh
+```
+
+### Avec une clé SSH spécifique
+
+```bash
+./run.sh --ssh-key chemin/vers/ma_cle_privee
+```
+
+> La clé **publique** correspondante doit exister dans le répertoire `ssh_keys/`.
+
+### Via Makefile
+
+```bash
+make
+```
+
+***
+
+## 🔑 2. Connexion SSH au conteneur
+
+Le script `run.sh` inclut désormais une connexion SSH **automatisée et non interactive**, adaptée au développement local.
+
+### Connexion manuelle (optionnelle)
+
+```bash
+ssh -p 2222 -i ssh_keys/debiantools_id_rsa geo@localhost
+```
+
+### Connexion automatique
+
+```bash
+./autoconnect.sh
+```
+
+Le script utilise les options suivantes :
+
+```bash
+-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+```
+
+Ce qui permet :
+
+*   ✔ Pas de question « Are you sure you want to continue connecting? »
+*   ✔ Pas de gestion de `known_hosts`
+*   ✔ Une connexion automatique idéale pour le développement
+
+***
+
+## 🔁 3. À propos du changement de clé SSH du serveur
+
+Lorsqu’un conteneur est reconstruit, le serveur SSH interne génère **de nouvelles clés d’hôte**.  
+Auparavant, cela déclenchait des alertes du type :
+
+    The authenticity of host 'localhost:2222' can't be established.
+
+➡️ **Ce comportement est désormais neutralisé** par les options SSH utilisées dans `run.sh`, ce qui évite toute intervention manuelle.
+
+### Si malgré tout vous souhaitez nettoyer `known_hosts` manuellement :
+
+```bash
+ssh-keygen -f ~/.ssh/known_hosts -R [localhost]:2222
+```
+
+***
+
+## 🔐 4. Gestion du token GitHub (facultatif)
+
+Le conteneur peut s’authentifier auprès de GitHub via :
+
+1.  **Un Docker Secret** : `github_token.txt`  
+    Monté dans le conteneur sous `/run/secrets/github_token`.
+
+2.  **Fallback** (développement) : le fichier `.env.local`  
+    Contenant une ligne :
+    ```bash
+    GITHUB_TOKEN=ghp_xxxxx...
+    ```
+
+Le script `startup/github.sh` :
+
+*   vérifie le token,
+*   s'authentifie via `gh auth login --with-token`,
+*   et utilise la source la plus sécurisée possible.
+
+***
+
+## 📦 5. Structure recommandée du projet
+
+    debiantools/
+    ├── compose.yml
+    ├── run.sh
+    ├── autoconnect.sh
+    ├── startup/
+    │   ├── github.sh
+    │   └── ...
+    ├── ssh_keys/
+    │   ├── debiantools_id_rsa
+    │   └── debiantools_id_rsa.pub
+    ├── secrets/
+    │   └── github_token.txt
+    ├── datas/
+    ├── config/
+    │   └── ...
+    ├── .env
+    └── .env.local
+
+***
+
+## 🧰 6. Notes pour le développement
+
+*   Le conteneur est basé sur Debian avec un utilisateur SSH (`geo` par défaut).
+*   `run.sh` active **BuildKit** pour plus de contrôle (build + secret).
+*   La connexion SSH automatique est sécurisée dans le contexte *local/dev*.
+*   Les secrets ne sont jamais exportés en variables d’environnement.

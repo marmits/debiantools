@@ -1,4 +1,6 @@
-## Container docker debian 
+## 🐋 Container docker debian 
+⚠️ Ce projet est seulement FUN pour une utilisation locale (aucun interêt en prod).
+
 - Permet d'utliser un container debian et d'y accéder en ssh.
 - L'utilisateur est `sudoers` et peut être modifiable via la variable `SSH_USER` du fichier `.env`
 - Voir le fichier `.env` pour d'autres variables personnalisables.
