@@ -18,5 +18,5 @@ sudo -u "${SSH_USER}" bash -c "grep -q 'allow-loopback-pinentry' '$GPG_HOME/gpg-
 # Exporter les variables pour les sessions interactives de l'utilisateur
 if ! grep -q 'GPG_TTY' "/home/${SSH_USER}/.bashrc"; then
   echo 'export GPG_TTY=$(tty)' >> "/home/${SSH_USER}/.bashrc"
-  echo 'export PASSWORD_STORE_DIR="$HOME/.password-store"' >> "/home/${SSH_USER}/.bashrc"
+  echo 'export PASS_STORE_DIR="$HOME/.password-store"' >> "/home/${SSH_USER}/.bashrc"
 fi

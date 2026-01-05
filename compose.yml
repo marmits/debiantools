@@ -10,7 +10,7 @@ services:
       - "maintainer=marmits.com"
     build:
       context: .
-      target: ${TARGET_SSH_DEV:-marmitstools}
+      target: ${TARGET_SSH_DEV:-ssh}
       args:
         BASE_IMAGE: ${BASE_IMAGE:-debian:latest}
         TZ: ${TZ:-Europe/Paris}
@@ -27,7 +27,6 @@ services:
       BASE_IMAGE: ${BASE_IMAGE}
       TZ: ${TZ}
       SSH_USER: ${SSH_USER}
-      GITHUB_TOKEN:
     volumes:
       - ./.env.local:/app/.env.local
       - ./.env:/app/.env
