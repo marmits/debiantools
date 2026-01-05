@@ -75,18 +75,28 @@ ssh-keygen -f ~/.ssh/known_hosts -R [localhost]:2222
 
 ## 🔐 4. Gestion du token GitHub (facultatif)
 
-Le conteneur peut s’authentifier auprès de GitHub via :
+Le conteneur peut s’authentifier auprès de GitHub via **fichiers de secrets** :
 
-1.  **Un Docker Secret** : `github_token.txt`  
-    Monté dans le conteneur sous `/run/secrets/github_token`.
+```
+secrets/
+│── github_token.txt            # générique (optionnel)
+│── github_token_perso.txt      # réel, ignoré par Git
+│── github_token_perso.example  # modèle commitable
+```
 
-2.  **Fallback** (développement) : le fichier `.env.local`  
-    Contenant une ligne :
-    ```bash
-    GITHUB_TOKEN=ghp_xxxxx...
-    ```
+```
+cp secrets/github_token_perso.example secrets/github_token_perso.txt
+```
+puis éditez ce fichier pour y coller le token personnel GitHub (PAT).
 
-Le script `startup/github.sh` :
+1. `secrets/github_token_perso.txt` — **prioritaire** (token personnel, ignoré par Git)
+2. `secrets/github_token.txt` — **équipe/générique** (optionnel)
+
+Les secrets sont montés dans le conteneur :
+- `/run/secrets/github_token_perso`
+- `/run/secrets/github_token`
+
+Le script `startup/github.sh` valide et utilise automatiquement le premier token **valide** trouvé.
 
 *   vérifie le token,
 *   s'authentifie via `gh auth login --with-token`,
@@ -107,6 +117,7 @@ Le script `startup/github.sh` :
     │   ├── debiantools_id_rsa
     │   └── debiantools_id_rsa.pub
     ├── secrets/
+    │   └── github_token_perso.txt
     │   └── github_token.txt
     ├── datas/
     ├── config/

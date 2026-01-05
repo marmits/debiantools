@@ -1,70 +1,108 @@
+
 #!/bin/sh
+# ============================================================
+# GitHub CLI bootstrap: auth via Docker secrets only
+# Priority: personal secret -> team secret
+# ============================================================
+
 set -e
-echo "*********************** GITHUB ********************"
 
-
-# Désactive les séquences d'échappement ANSI qui peuvent polluer les logs
+echo "====================== GITHUB ======================"
 export TERM=dumb
-gh config set prompt disabled
+gh config set prompt disabled >/dev/null 2>&1 || true
 
-# -------------------------------------------------------------------
-# Nettoyage initial
-# -------------------------------------------------------------------
+# Reset any previous auth
 gh auth logout >/dev/null 2>&1 || true
 unset GITHUB_TOKEN
 
-# -------------------------------------------------------------------
-# Fonction de validation
-# -------------------------------------------------------------------
+# ---- Helpers ------------------------------------------------
+
+# mask_token: print token with middle masked (ghp_abc***xyz)
+mask_token() {
+  token="$1"
+  case "$token" in
+    ghp_*)
+      prefix="ghp_"
+      rest="${token#ghp_}"
+      first="$(printf '%s' "$rest" | cut -c1-6)"
+      last="$(printf '%s' "$rest" | awk '{print substr($0, length($0)-3)}')"
+      printf '%s%s***%s' "$prefix" "$first" "$last"
+      ;;
+    *)
+      first="$(printf '%s' "$token" | cut -c1-6)"
+      last="$(printf '%s' "$token" | awk '{print substr($0, length($0)-3)}')"
+      printf '%s***%s' "$first" "$last"
+      ;;
+  esac
+}
+
+# validate_github_token: returns 0 if API /user answers with "login"
 validate_github_token() {
-  local token=$1
+  token="$1"
   [ -z "$token" ] && return 1
-  
-  # Test avec timeout et vérification du user
   if curl -s -m 5 -H "Authorization: token $token" https://api.github.com/user | grep -q '"login"'; then
     return 0
   else
-    echo "Token invalide ou erreur de connexion à GitHub" >&2
     return 1
   fi
 }
 
-# -------------------------------------------------------------------
-# Stratégie d'authentification
-# -------------------------------------------------------------------
+# login_with_token: feed token to gh and log masked token & source
+login_with_token() {
+  token="$1"
+  note="$2"
+  masked="$(mask_token "$token")"
+  echo ">>> Using token source: $note"
+  echo ">>> Token (masked): $masked"
+  printf '%s' "$token" | gh auth login --with-token
+}
+
+# (optional) ensure gh config dir ownership for $SSH_USER
+write_hosts_yml() {
+  [ -z "$SSH_USER" ] && return 0
+  cfg_dir="/home/$SSH_USER/.config/gh"
+  mkdir -p "$cfg_dir"
+  chown -R "$SSH_USER:$SSH_USER" "/home/$SSH_USER/.config" 2>/dev/null || true
+}
+
+# ---- Sources in priority order ------------------------------
+
 authenticated=0
 
-# 1. Essai avec Docker Secret (priorité absolue)
-if [ -f "/run/secrets/github_token" ]; then
-  token=$(cat /run/secrets/github_token | tr -d '\r\n')
+# 1) Personal secret (highest priority)
+if [ "$authenticated" -eq 0 ] && [ -f "/run/secrets/github_token_perso" ]; then
+  token="$(tr -d '\r\n' < /run/secrets/github_token_perso)"
   if validate_github_token "$token"; then
-    echo "*********** GITHUB (Docker Secret) *************"
-    echo "$token" | gh auth login --with-token
+    login_with_token "$token" "Docker Secret: personal (/run/secrets/github_token_perso)"
     authenticated=1
+  else
+    echo "WARN: Personal secret invalid or unreachable."
   fi
 fi
 
-# 2. Fallback avec .env.local (développement)
-if [ "$authenticated" -eq 0 ] && [ -f "/app/.env.local" ]; then
-  token=$(grep '^GITHUB_TOKEN=' /app/.env.local | cut -d= -f2- | tr -d '\r\n" ')
+# 2) Team/generic secret
+if [ "$authenticated" -eq 0 ] && [ -f "/run/secrets/github_token" ]; then
+  token="$(tr -d '\r\n' < /run/secrets/github_token)"
   if validate_github_token "$token"; then
-    echo "*********** GITHUB (.env.local) *************"
-    echo "$token" | gh auth login --with-token
+    login_with_token "$token" "Docker Secret: team (/run/secrets/github_token)"
     authenticated=1
+  else
+    echo "WARN: Team secret invalid or unreachable."
   fi
 fi
 
-# 3. Échec contrôlé
+# ---- Final state & hints ------------------------------------
+
 if [ "$authenticated" -eq 0 ]; then
-  echo "WARNING: GitHub CLI non authentifié - certaines fonctionnalités seront désactivées" >&2
-  echo "Pour activer gh gist:" >&2
-  echo "1. Créez un token avec permission 'gist' sur https://github.com/settings/tokens" >&2
-  echo "2. Stockez-le dans :" >&2
-  echo "   - ./github_token.txt (pour Docker Secret)" >&2
-  echo "   - OU /app/.env.local (GITHUB_TOKEN=ghp_...)" >&2
-  exit 0  # Ne pas bloquer le container
+  echo "WARNING: GitHub CLI not authenticated — features requiring auth will be limited."
+  echo "Provide a token (scope 'gist' at minimum) in one of:"
+  echo "  - secrets/github_token_perso.txt (personal, highest priority)"
+  echo "  - secrets/github_token.txt       (team/generic)"
+  exit 0
 fi
 
-# Vérification finale
+write_hosts_yml
+
 echo "GitHub CLI status:"
-gh auth status
+gh auth status || true
+echo "===================================================="

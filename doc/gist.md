@@ -12,14 +12,12 @@
 ```bash
 echo "ghp_tokengénéré" > github_token.txt
 ```
-
-### 3. (bis)
-   ou dans `.env.local`
+- ou **Enregistrer le token dans les secrets (recommandé non-commité)**
 ```bash
-echo "GITHUB_TOKEN=ghp_lavaleurdutoken > .env.local
+echo "ghp_tokengénéré" > github_token_perso.txt
 ```
 
-### 4. TEST :
+### 3. TEST :
 - Depuis la machine hôte:
 ```bash
 docker exec -it marmits_ssh gh gist create --public /etc/hosts 
@@ -42,7 +40,7 @@ gist /chemin/unfichier
 ```
 
 
-### 5.bashrc (alias)
+### 4.bashrc (alias)
 ```bash
 #Alias pour envoyer un fichier vers Gist via Docker
 docker-gist() {

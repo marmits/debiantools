@@ -38,7 +38,10 @@ services:
       - source: ssh_public_key
         target: /run/secrets/ssh_public_key
       - source: github_token  # Nouveau secret
-        target: /run/secrets/github_token        
+        target: /run/secrets/github_token
+      - source: github_token_perso  # secret perso, si présent
+        target: /run/secrets/github_token_perso
+
     tmpfs:
       - /tmp:size=100m #éphémère en RAM
     deploy:
@@ -58,7 +61,9 @@ secrets:
   ssh_public_key:
     file: ${KEY_DIR}/${KEY_PREFIX}.pub
   github_token:
-    file: ./github_token.txt
+    file: ./secrets/github_token.txt
+  github_token_perso:
+    file: ./secrets/github_token_perso.txt
 
 volumes:
   datas:
