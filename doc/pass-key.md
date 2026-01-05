@@ -41,7 +41,7 @@ gpg --import-ownertrust </datas/keys/ownertrust.txt # si tu as exporté l'ownert
 
 ```bash
 # Toujours en tant que debian dans le container
-export PASSWORD_STORE_DIR="$HOME/.password-store"
+export PASS_STORE_DIR="$HOME/.password-store"
 pass init 1234ABCD5678EF90     # utilise l'ID/empreinte de ta clé GPG
 pass insert system/ssh/vps-root ou pass add system/ssh/vps-root ou  
 pass show system/ssh/vps-root

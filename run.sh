@@ -6,7 +6,10 @@
 
 # Charge les variables depuis .env si le fichier existe
 if [ -f .env ]; then
-    export $(grep -v '^#' .env | xargs)
+    #export $(grep -v '^#' .env | xargs)
+    set -a
+    [ -f .env ] && . ./.env
+    set +a
 fi
 
 # Définit les valeurs par défaut
@@ -99,7 +102,7 @@ if ! docker ps --filter "name=$CONTAINER_NAME_TOOLS" --format '{{.Status}}' | gr
     	-t "$IMAGE_NAME_DEBIAN" .
 
     # => voir Dockerfile => RUN --mount=type=secret,id=ssh_pub
-    docker compose up -d --wait
+    docker compose -f compose.yml up -d --no-build --wait
 fi
 
 
