@@ -15,4 +15,4 @@ $ `cmatrix -r`
 - [Terminal Tools](https://marmits.com/wiki/Cat%C3%A9gorie:Terminal_Tools)
 
 #### [Gestionnaire de mots de passe Unix](https://marmits.com/wiki/Unix_pass)
-- [DOC pass-key.md](doc/pass-key.md)
+- [DOC pass-key.md](pass-key.md)
