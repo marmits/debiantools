@@ -24,6 +24,12 @@ Dans le répertoire du projet :
 make
 ```
 
+### Mettre à jour les images Docker
+
+```bash
+make update
+```
+
 ***
 
 ## 🔑 2. Connexion SSH au conteneur
