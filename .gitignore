@@ -12,6 +12,7 @@ secrets/*
 !secrets/.gitkeep
 secrets/github_token.txt
 secrets/github_token_perso.txt
+/perso/
 
 # Ignorer contenu de datas/works/marmits/output mais garder le dossier
 datas/works/marmits/output/*
