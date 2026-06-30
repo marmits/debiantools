@@ -10,7 +10,7 @@ source .env
 set +a
 
 # Valeur par défaut si SSH_OPTS n'est pas défini dans l'environnement
-SSH_OPTS="${SSH_OPTS:--o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null}"
+SSH_OPTS="${SSH_OPTS:--o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes}"
 
 
 # Vérifier que la clé existe
